@@ -27,19 +27,12 @@ async function fetchTranslations(locale) {
 }
 
 async function getTranslationsConfig() {
-    if (_lang === undefined) {
-        _lang = applicationFunctionManager.getCurrentLocale();
-    }
-    if (_lang === undefined) {
-        _lang = 'zh-cn';
-        return { translations: {}, lang: _lang };
-    }
+    _lang = 'vi'; // ép luôn ngôn ngữ là tiếng Việt
     if (_translations === undefined) {
-        _translations = await fetchTranslations(_lang)
+        _translations = await fetchTranslations(_lang);
     }
     return { translations: _translations, lang: _lang };
 }
-
 /**
  * 将翻译应用到 DOM 元素
  * @param {Object} translations - 翻译对象
