@@ -1,48 +1,27 @@
 import { APP, BASE, DERIVED, EDITOR, SYSTEM, USER } from './core/manager.js';
-import { Logger } from './services/logger.js';
 import { openTableRendererPopup, updateSystemMessageTableStatus } from "./scripts/renderer/tablePushToChat.js";
 import { loadSettings } from "./scripts/settings/userExtensionSetting.js";
-import { resetPopupConfirmations } from './components/popupConfirm.js';
 import { ext_getAllTables, ext_exportAllTablesAsJson } from './scripts/settings/standaloneAPI.js';
 import { openTableDebugLogPopup } from "./scripts/settings/devConsole.js";
-import { TableTwoStepSummary, triggerTableFillFromLastMessage } from "./scripts/runtime/separateTableUpdate.js";
-import { saveStepData, readStepData, clearStepData } from './services/stepByStepStorage.js';
+import { TableTwoStepSummary } from "./scripts/runtime/separateTableUpdate.js";
 import { initTest } from "./components/_fotTest.js";
 import { initAppHeaderTableDrawer, openAppHeaderTableDrawer } from "./scripts/renderer/appHeaderTableBaseDrawer.js";
 import { initRefreshTypeSelector } from './scripts/runtime/absoluteRefresh.js';
 import {refreshTempView, updateTableContainerPosition} from "./scripts/editor/tableTemplateEditView.js";
-import { refreshContextView, autoImportFromStash } from "./scripts/editor/chatSheetsDataView.js";
 import { functionToBeRegistered } from "./services/debugs.js";
 import { parseLooseDict, replaceUserTag } from "./utils/stringUtil.js";
-import { reloadCurrentChat } from "/script.js";
 import {executeTranslation} from "./services/translate.js";
 import applicationFunctionManager from "./services/appFuncManager.js";
+import {SheetBase} from "./core/table/base.js";
+import { Cell } from "./core/table/cell.js";
 
-// Thêm hỗ trợ locale tự động
-let currentLocale = 'en'; // Default
-if (navigator.language.startsWith('vi') || navigator.language.startsWith('vi-VN')) {
-    currentLocale = 'vi';
-} else if (navigator.language.startsWith('zh')) {
-    currentLocale = 'zh-cn';
-}
-
-async function loadLocale() {
+// Locale detection
+if (navigator.language.startsWith('vi')) {
     try {
-        const response = await fetch(`./assets/locales/${currentLocale}.json`);
-        if (!response.ok) throw new Error('Locale file not found');
-        const localeData = await response.json();
-        window.translations = localeData;
-        console.log(`Đã tải locale: ${currentLocale}`);
-    } catch (error) {
-        console.warn(`Locale ${currentLocale} không tìm thấy, fallback sang en`);
-        try {
-            const fallbackResponse = await fetch('./assets/locales/en.json');
-            const fallbackData = await fallbackResponse.json();
-            window.translations = fallbackData;
-        } catch (fallbackError) {
-            console.error('Không thể tải locale fallback:', fallbackError);
-            window.translations = {};
-        }
+        const viLocale = await import('./assets/locales/vi.json');
+        window.translations = viLocale.default;
+    } catch {
+        // Fallback to default
     }
 }
 
