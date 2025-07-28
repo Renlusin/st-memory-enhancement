@@ -97,13 +97,12 @@
 .tableDom td,
 .tableDom th {
     border: 1px solid #4e4848;
-    padding: 5px 8px;
+    padding: 3px 5px;
+    white-space: normal;
     word-break: break-word;
-    overflow-wrap: break-word;
-    min-width: 80px;
-    max-width: 100%; /* Thêm dòng này */
-    line-height: 1.2;
+    overflow-wrap: anywhere; /* <-- cái này giúp cắt được từ "Yêuthương" thành "Yêu thương" nếu thiếu khoảng trắng */
 }
+
 
 td.selected {
     background-color: rgb(56, 66, 70);
