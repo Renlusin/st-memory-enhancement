@@ -90,22 +90,17 @@
 
 .tableDom {
     border-collapse: collapse;
-    white-space: normal !important; /* Buộc wrap tự nhiên */
+    white-space: normal; /* Cho phép chữ wrap tự nhiên */
     font-family: Arial, "Times New Roman", sans-serif; /* Đảm bảo hỗ trợ tiếng Việt */
-	table-layout: auto;
 }
 
 .tableDom td,
 .tableDom th {
     border: 1px solid #4e4848;
-    padding: 8px 12px !important; /* Tăng padding để tạo không gian */
-    word-break: break-word !important; /* Tách từ khi cần */
-    overflow-wrap: break-word !important; /* Tách từ dài */
-    word-wrap: break-word !important; /* Hỗ trợ thêm cho trình duyệt */
-    min-width: 120px !important; /* Tăng chiều rộng tối thiểu */
-    max-width: 100% !important; /* Giới hạn chiều rộng tối đa */
-    line-height: 1.4 !important; /* Tăng khoảng cách dòng */
-    overflow: visible !important; /* Đảm bảo nội dung không bị ẩn */
+    padding: 3px 5px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere; /* <-- cái này giúp cắt được từ "Yêuthương" thành "Yêu thương" nếu thiếu khoảng trắng */
 }
 
 td.selected {
