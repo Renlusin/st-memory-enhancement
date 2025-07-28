@@ -90,14 +90,18 @@
 
 .tableDom {
     border-collapse: collapse;
-    white-space: normal; /* Thay đổi từ nowrap thành normal để chữ có thể wrap (tách dòng) khi cần */
+    white-space: normal; /* Cho phép chữ wrap tự nhiên */
+    font-family: Arial, "Times New Roman", sans-serif; /* Đảm bảo hỗ trợ tiếng Việt */
 }
 
 .tableDom td,
 .tableDom th {
     border: 1px solid #4e4848;
-    padding: 3px 5px;
-    word-break: break-word; /* Thêm thuộc tính này để chữ dài (như tiếng Việt có dấu) có thể tách ra và không dính liền */
+    padding: 5px 8px; /* Tăng padding để tạo không gian */
+    word-break: break-word; /* Tách từ khi cần */
+    overflow-wrap: break-word; /* Hỗ trợ tách từ dài */
+    min-width: 80px; /* Tăng chiều rộng tối thiểu để tránh tràn */
+    line-height: 1.2; /* Tăng khoảng cách dòng để chữ không dính */
 }
 
 td.selected {
@@ -184,9 +188,6 @@ td.selected {
     width: 100%;
 }
 
-
-
-
 /* popup */
 .popup-container {
     display: flex;
@@ -202,8 +203,6 @@ td.selected {
     overflow: hidden;
 }
 
-
-
 .history-title-bar {
     /* Kiểu thanh tiêu đề */
     padding-bottom: 10px;
@@ -217,7 +216,6 @@ td.selected {
     overflow-y: auto;
     flex-grow: 1;
 }
-
 
 .history-group {
     margin-bottom: 25px;
@@ -325,7 +323,6 @@ td.selected {
     /* Kiểu cho mỗi mục preview nếu cần */
 }
 
-
 .params-table {
     display: flex;
     flex-direction: row;
@@ -372,10 +369,6 @@ td.selected {
     border-left: 5px solid #f44336;
     background-color: #f44336;
 }
-
-
-
-
 
 #custom_temperature {
     flex: 1;
@@ -479,8 +472,6 @@ td.selected {
     word-break: break-word;
 }
 
-
-
 /* Kiểu dùng cho debug-log */
 .debug-log-popup-container {
     display: flex;
@@ -574,7 +565,6 @@ td.selected {
     justify-content: flex-start;
     align-items: center;
 }
-
 
 /* Kiểu dùng cho debug-log */
 /*.drag-table {*/
