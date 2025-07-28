@@ -101,7 +101,6 @@
     "presetLabel": "Preset",
     "presetDefault": "Mặc định",
     "insertLastMessageLabel": "Chèn vào tin nhắn cuối",
-    "insertLastMessageLabel": "Chèn vào tin nhắn cuối",
     "insertLastMessageDesc": "(Chèn vào dưới cùng khối tin nhắn cuối thay vì dưới cùng ngữ cảnh)",
     "regexReplaceLabel": "Sử dụng regex để thay thế nội dung trong cuộc trò chuyện:",
 
