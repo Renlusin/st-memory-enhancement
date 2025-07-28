@@ -97,11 +97,10 @@
 .tableDom td,
 .tableDom th {
     border: 1px solid #4e4848;
-    padding: 5px 8px; /* Tăng padding để tạo không gian */
-    word-break: break-word; /* Tách từ khi cần */
-    overflow-wrap: break-word; /* Hỗ trợ tách từ dài */
-    min-width: 80px; /* Tăng chiều rộng tối thiểu để tránh tràn */
-    line-height: 1.2; /* Tăng khoảng cách dòng để chữ không dính */
+    padding: 3px 5px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 td.selected {
