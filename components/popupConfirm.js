@@ -1,8 +1,8 @@
 import {SYSTEM, USER} from "../core/manager.js";
 
-// Static map to track temporarily disabled popups by ID
+// Bản đồ tĩnh để theo dõi các popup bị vô hiệu hóa tạm thời theo ID
 const disabledPopups = {};
-// Static map to track popups that should always be confirmed for the current session
+// Bản đồ tĩnh để theo dõi các popup luôn được xác nhận trong phiên hiện tại
 const alwaysConfirmPopups = {};
 
 const bgc = '#3736bb'
@@ -11,40 +11,40 @@ const bgcg = '#de81f1'
 // const bgcg = 'var(--SmartThemeUserMesBlurTintColor)'
 const tc = '#fff'
 
-export async function newPopupConfirm(text, cancelText = 'Cancel', confirmText = 'Confirm', id = '', dontRemindText = null, alwaysConfirmText = null) {
+export async function newPopupConfirm(text, cancelText = 'Hủy', confirmText = 'Xác nhận', id = '', dontRemindText = null, alwaysConfirmText = null) {
     if (id && disabledPopups[id]) {
-        return Promise.resolve('dont_remind_active'); // Permanently disabled, don't show
+        return Promise.resolve('dont_remind_active'); // Bị vô hiệu hóa vĩnh viễn, không hiển thị
     }
     if (id && alwaysConfirmPopups[id]) {
-        return Promise.resolve(true); // Session-only always confirm, resolve as true but still show popup
+        return Promise.resolve(true); // Luôn xác nhận chỉ trong phiên, resolve là true nhưng vẫn hiển thị popup
     }
     return await new PopupConfirm().show(text, cancelText, confirmText, id, dontRemindText, alwaysConfirmText);
 }
 
 export class PopupConfirm {
-    static get disabledPopups() { // Getter for external access if needed, though direct modification is in _handleAction
+    static get disabledPopups() { // Getter để truy cập bên ngoài nếu cần, mặc dù sửa đổi trực tiếp nằm trong _handleAction
         return disabledPopups;
     }
 
     constructor() {
         this.uid = SYSTEM.generateRandomString(10);
-        // this.confirm = false; // Less relevant now with specific promise resolutions
+        // this.confirm = false; // Ít liên quan hơn bây giờ với các resolution promise cụ thể
         this.toastContainer = null;
         this.toastElement = null;
         this.resolvePromise = null;
         this._text = '';
-        this.messageText = null; // 保存文本元素的引用
-        this.id = null; // To store the popup ID
+        this.messageText = null; // Lưu trữ tham chiếu đến phần tử văn bản
+        this.id = null; // Để lưu trữ ID của popup
     }
 
     _handleAction(resolutionValue) {
         let actualResolutionValue = resolutionValue;
         if (resolutionValue === 'dont_remind_selected' && this.id) {
             disabledPopups[this.id] = true;
-            actualResolutionValue = true; // Act as if "Confirm" was pressed
+            actualResolutionValue = true; // Coi như đã nhấn "Xác nhận"
         } else if (resolutionValue === 'always_confirm_selected' && this.id) {
             alwaysConfirmPopups[this.id] = true;
-            actualResolutionValue = true; // Act as if "Confirm" was pressed
+            actualResolutionValue = true; // Coi như đã nhấn "Xác nhận"
         }
 
         if (this.toastElement) {
@@ -64,7 +64,7 @@ export class PopupConfirm {
         }
     }
 
-    // 添加text属性的getter和setter
+    // Thêm getter và setter cho thuộc tính text
     get text() {
         return this._text;
     }
@@ -76,9 +76,9 @@ export class PopupConfirm {
         }
     }
 
-    async show(message = 'Are you sure?', cancelText = 'Cancel', confirmText = 'Confirm', id = null, dontRemindText = null, alwaysConfirmText = null) {
+    async show(message = 'Bạn có chắc không?', cancelText = 'Hủy', confirmText = 'Xác nhận', id = null, dontRemindText = null, alwaysConfirmText = null) {
         this._text = message;
-        this.id = id; // Store the ID
+        this.id = id; // Lưu trữ ID
 
         this.toastContainer = document.getElementById('toast-container');
         if (!this.toastContainer) {
@@ -89,7 +89,7 @@ export class PopupConfirm {
             document.body.appendChild(this.toastContainer);
         }
 
-        // Create toast element
+        // Tạo phần tử toast
         this.toastElement = document.createElement('div');
         this.toastElement.id = this.uid;
         this.toastElement.className = 'toast toast-confirm';
@@ -107,10 +107,10 @@ export class PopupConfirm {
         this.toastElement.style.backdropFilter = 'blur(calc(var(--SmartThemeBlurStrength)*2))';
         this.toastElement.style.webkitBackdropFilter = 'blur(var(--SmartThemeBlurStrength))';
 
-        // Create message container
+        // Tạo container cho thông điệp
         const messageEl = $('<div class="toast-message"></div>')[0];
         const messageIcon = $('<i class="fa-solid fa-code-branch""></i>')[0];
-        this.messageText = $('<span id="toast_message_text"></span>')[0]; // 保存为类属性
+        this.messageText = $('<span id="toast_message_text"></span>')[0]; // Lưu trữ làm thuộc tính lớp
         messageEl.style.display = 'flex';
         messageEl.style.flexDirection = 'row';
         messageEl.style.alignItems = 'center';
@@ -124,17 +124,17 @@ export class PopupConfirm {
         messageIcon.style.padding = '0'
         messageIcon.style.margin = '0'
 
-        this.messageText.textContent = this._text; // 使用存储的text值
+        this.messageText.textContent = this._text; // Sử dụng giá trị text được lưu trữ
         messageEl.appendChild(messageIcon);
         messageEl.appendChild(this.messageText);
 
-        // Create buttons container
+        // Tạo container cho các nút
         const buttons = document.createElement('div');
         buttons.style.display = 'flex';
         buttons.style.justifyContent = 'flex-end';
         buttons.style.gap = '10px';
 
-        // Create confirm button
+        // Tạo nút xác nhận
         const confirmBtn = document.createElement('button');
         confirmBtn.textContent = confirmText;
         confirmBtn.style.width = '100%'
@@ -149,7 +149,7 @@ export class PopupConfirm {
         confirmBtn.classList.add('popup-button-ok', 'menu_button', 'result-control', 'interactable');
         confirmBtn.onclick = () => this._handleAction(true);
 
-        // Create cancel button
+        // Tạo nút hủy
         const cancelBtn = document.createElement('button');
         cancelBtn.textContent = cancelText;
         cancelBtn.style.width = '100%';
@@ -164,15 +164,14 @@ export class PopupConfirm {
         cancelBtn.classList.add('popup-button-cancel', 'menu_button', 'result-control', 'interactable');
         cancelBtn.onclick = () => this._handleAction(false);
 
-        // Build the DOM structure
-        buttons.appendChild(cancelBtn); // "否" button
-        buttons.appendChild(confirmBtn); // "是" button
+        // Xây dựng cấu trúc DOM
+        buttons.appendChild(cancelBtn); // Nút "Hủy"
+        buttons.appendChild(confirmBtn); // Nút "Xác nhận"
 
-        // Create "Don't Remind" button if text and id are provided
-        // Create "Don't Remind" button if text and id are provided
+        // Tạo nút "Không nhắc lại" nếu có text và id được cung cấp
         if (dontRemindText && this.id) {
             const dontRemindBtn = document.createElement('button');
-            dontRemindBtn.textContent = dontRemindText; // e.g., "不再提示"
+            dontRemindBtn.textContent = dontRemindText; // Ví dụ: "Không nhắc lại"
             dontRemindBtn.style.width = '100%';
             dontRemindBtn.style.padding = '3px 12px';
             dontRemindBtn.style.background = 'none';
@@ -186,15 +185,15 @@ export class PopupConfirm {
             buttons.appendChild(dontRemindBtn);
         }
         
-        // Create "Always Confirm" button if text and id are provided
+        // Tạo nút "Luôn xác nhận" nếu có text và id được cung cấp
         if (alwaysConfirmText && this.id) {
             const alwaysConfirmBtn = document.createElement('button');
-            alwaysConfirmBtn.textContent = alwaysConfirmText; // e.g., "一直选是"
+            alwaysConfirmBtn.textContent = alwaysConfirmText; // Ví dụ: "Luôn xác nhận"
             alwaysConfirmBtn.style.width = '100%';
             alwaysConfirmBtn.style.padding = '3px 12px';
             alwaysConfirmBtn.style.background = 'none';
             alwaysConfirmBtn.style.color = tc;
-            alwaysConfirmBtn.style.border = `1px solid ${bgc}`; // Same as cancel button for visual distinction
+            alwaysConfirmBtn.style.border = `1px solid ${bgc}`; // Giống nút hủy để phân biệt trực quan
             alwaysConfirmBtn.style.borderRadius = '6px';
             alwaysConfirmBtn.style.cursor = 'pointer';
             alwaysConfirmBtn.style.fontSize = '0.85rem';
@@ -206,31 +205,31 @@ export class PopupConfirm {
         this.toastElement.appendChild(messageEl);
         this.toastElement.appendChild(buttons);
         // this.toastContainer.appendChild(this.toastElement);
-        // 插入到容器的顶部而不是底部
+        // Chèn vào đầu container thay vì cuối
         this.toastContainer.insertBefore(this.toastElement, this.toastContainer.firstChild);
 
-        // Trigger animation
+        // Kích hoạt hiệu ứng chuyển động
         setTimeout(() => {
             this.toastElement.style.transform = 'translateY(0)';
             this.toastElement.style.opacity = '1';
         }, 10);
 
-        // Return a promise that resolves when user clicks a button
+        // Trả về một promise sẽ resolve khi người dùng nhấp vào nút
         return new Promise((resolve) => {
-            this.resolvePromise = resolve; // _handleAction will use this
-            // Button onclick handlers are now set directly to call _handleAction.
+            this.resolvePromise = resolve; // _handleAction sẽ sử dụng
+            // Các trình xử lý onclick của nút giờ được đặt trực tiếp để gọi _handleAction.
         });
     }
 
-    // 关闭弹窗 - this.close() can be called if an external force closes the popup.
-    // _handleAction now manages the standard cleanup path.
+    // Đóng popup - this.close() có thể được gọi nếu một lực bên ngoài đóng popup.
+    // _handleAction giờ quản lý đường dẫn dọn dẹp tiêu chuẩn.
     close() {
         this.cancelFrameUpdate();
-        // If resolvePromise exists, it means the popup was shown and might not have been resolved yet.
-        // Resolve with a default value (e.g., false or a specific 'closed_manually' value) if needed.
-        // For now, just visually close it. If _handleAction wasn't called, the promise won't resolve.
-        // This behavior might need adjustment based on how .close() is used externally.
-        // Typically, user interaction (handled by _handleAction) resolves the promise.
+        // Nếu resolvePromise tồn tại, nghĩa là popup đã được hiển thị và có thể chưa được resolve.
+        // Resolve với giá trị mặc định (ví dụ: false hoặc giá trị 'closed_manually' cụ thể) nếu cần.
+        // Hiện tại, chỉ đóng trực quan. Nếu _handleAction không được gọi, promise sẽ không resolve.
+        // Hành vi này có thể cần điều chỉnh dựa trên cách .close() được sử dụng bên ngoài.
+        // Thông thường, tương tác của người dùng (được xử lý bởi _handleAction) sẽ resolve promise.
         if (this.toastElement) {
             this.toastElement.style.opacity = '0';
             setTimeout(() => {
@@ -243,27 +242,27 @@ export class PopupConfirm {
                 this.toastElement = null;
             }, 300);
         }
-        // If the promise needs to be resolved when close() is called externally:
+        // Nếu promise cần được resolve khi close() được gọi từ bên ngoài:
         // if (this.resolvePromise) {
-        //     this.resolvePromise('closed_externally'); // Or false, or null
-        //     this.resolvePromise = null; // Prevent multiple resolutions
+        //     this.resolvePromise('closed_externally'); // Hoặc false, hoặc null
+        //     this.resolvePromise = null; // Ngăn chặn nhiều resolution
         // }
     }
 
     frameUpdate(callback) {
-        // 清理现有的动画循环
+        // Dọn dẹp vòng lặp hoạt hình hiện tại
         this.cancelFrameUpdate();
 
-        // 只在菜单显示时启动动画循环
+        // Chỉ khởi động vòng lặp hoạt hình khi menu được hiển thị
         if (this.toastElement.style.display !== 'none') {
             const updateLoop = (timestamp) => {
-                // 如果菜单被隐藏，停止循环
+                // Nếu menu bị ẩn, dừng vòng lặp
                 if (this.toastElement.style.display === 'none') {
                     this.cancelFrameUpdate();
                     return;
                 }
 
-                callback(this, timestamp); // 添加 timestamp 参数以便更精确的动画控制
+                callback(this, timestamp); // Thêm tham số timestamp để kiểm soát hoạt hình chính xác hơn
                 this._frameUpdateId = requestAnimationFrame(updateLoop);
             };
 
@@ -279,20 +278,20 @@ export class PopupConfirm {
     }
 }
 
-// 获取计算后的颜色值并确保完全不透明
+// Lấy giá trị màu đã tính toán và đảm bảo hoàn toàn không trong suốt
 // function getSolidColor (target) {
 //     const colorValue = getComputedStyle(document.documentElement)
 //         .getPropertyValue(target).trim();
 //
-//     // 创建临时元素来解析颜色
+//     // Tạo phần tử tạm để phân tích màu
 //     const tempEl = document.createElement('div');
 //     tempEl.style.color = colorValue;
 //     document.body.appendChild(tempEl);
 //
-//     // 获取计算后的 RGB 值
+//     // Lấy giá trị RGB đã tính toán
 //     const rgb = getComputedStyle(tempEl).color;
 //     document.body.removeChild(tempEl);
 //
-//     // 确保返回的是 rgb() 格式（不带 alpha）
+//     // Đảm bảo trả về định dạng rgb() (không có alpha)
 //     return rgb.startsWith('rgba') ? rgb.replace(/,[^)]+\)/, ')') : rgb;
 // }
