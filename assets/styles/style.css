@@ -1,14 +1,14 @@
-/* 以下为原有样式，不修改 */
-.--SmartThemeBodyColor {}               /* 主题正文颜色 */
-.--SmartThemeEmColor {}                 /* 强调颜色 */
-.--SmartThemeUnderlineColor {}          /* 下划线颜色 */
-.--SmartThemeQuoteColor {}              /* 引用颜色 */
-.--SmartThemeShadowColor {}             /* 阴影颜色 */
-.--SmartThemeChatTintColor {}           /* 聊天背景颜色 */
-.--SmartThemeBlurTintColor {}           /* 模糊背景颜色 */
-.--SmartThemeBorderColor {}             /* 主题边框颜色 */
-.--SmartThemeUserMesBlurTintColor {}    /* 用户消息模糊背景颜色 */
-.--SmartThemeBotMesBlurTintColor {}     /* 机器人消息模糊背景颜色 */
+/* Dưới đây là các kiểu gốc, không chỉnh sửa */
+.--SmartThemeBodyColor {}               /* Màu chính văn bản chủ đề */
+.--SmartThemeEmColor {}                 /* Màu nhấn mạnh */
+.--SmartThemeUnderlineColor {}          /* Màu gạch chân */
+.--SmartThemeQuoteColor {}              /* Màu trích dẫn */
+.--SmartThemeShadowColor {}             /* Màu bóng */
+.--SmartThemeChatTintColor {}           /* Màu nền chat */
+.--SmartThemeBlurTintColor {}           /* Màu nền mờ */
+.--SmartThemeBorderColor {}             /* Màu viền chủ đề */
+.--SmartThemeUserMesBlurTintColor {}    /* Màu nền mờ tin nhắn người dùng */
+.--SmartThemeBotMesBlurTintColor {}     /* Màu nền mờ tin nhắn bot */
 
 .unfinished {
     color: #f44336;
@@ -54,8 +54,8 @@
     color: var(--fullred) !important;
 }
 
-/* 以下用于定义自定义样式，不修改原有样式 */
-/* 新增的自定义样式 */
+/* Dưới đây dùng để định nghĩa các kiểu tùy chỉnh, không chỉnh sửa các kiểu gốc */
+/* Các kiểu tùy chỉnh mới thêm */
 .memory_enhancement_settings .menu_button {
     width: fit-content;
     display: flex;
@@ -90,13 +90,14 @@
 
 .tableDom {
     border-collapse: collapse;
-    white-space: nowrap;
+    white-space: normal; /* Thay đổi từ nowrap thành normal để chữ có thể wrap (tách dòng) khi cần */
 }
 
 .tableDom td,
 .tableDom th {
     border: 1px solid #4e4848;
     padding: 3px 5px;
+    word-break: break-word; /* Thêm thuộc tính này để chữ dài (như tiếng Việt có dấu) có thể tách ra và không dính liền */
 }
 
 td.selected {
@@ -134,9 +135,9 @@ td.selected {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 
-    /* 添加背景模糊效果 */
+    /* Thêm hiệu ứng nền mờ */
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* 兼容旧版 Safari */
+    -webkit-backdrop-filter: blur(10px); /* Tương thích với Safari cũ */
 }
 
 .tableToolbar button {
@@ -204,7 +205,7 @@ td.selected {
 
 
 .history-title-bar {
-    /* 标题栏样式 */
+    /* Kiểu thanh tiêu đề */
     padding-bottom: 10px;
 }
 
@@ -226,16 +227,16 @@ td.selected {
 }
 
 .collapsible-history-group {
-    /* 可折叠的 history-group 特有样式 */
+    /* Kiểu đặc biệt cho history-group có thể thu gọn */
 }
 
 .history-item {
     padding: 2px;
     display: flex;
-    flex-direction: column; /* 修改为 column 布局 */
+    flex-direction: column; /* Thay đổi thành column layout */
     align-items: stretch;
     /*border-radius: 8px;*/
-    position: relative; /* Add relative positioning context for left-rectangle */
+    position: relative; /* Thêm vị trí tương đối để làm ngữ cảnh cho left-rectangle */
 }
 
 .history-item:hover {
@@ -278,7 +279,7 @@ td.selected {
 .function-name {
     font-weight: bold;
     color: #aaa;
-    margin-left: 5px; /* 函数名和序号之间的间距 */
+    margin-left: 5px; /* Khoảng cách giữa tên hàm và số thứ tự */
 }
 
 .function-name.error-function {
@@ -292,7 +293,7 @@ td.selected {
     width: 4px;
     height: 100%;
     border-radius: 8px;
-    /* background-color: #f44336;  不再需要默认背景色，因为 class 会覆盖 */
+    /* background-color: #f44336;  Không cần màu nền mặc định nữa, vì class sẽ ghi đè */
 }
 
 .item-index {
@@ -300,7 +301,7 @@ td.selected {
     text-align: left;
     color: #888;
     font-size: 0.9em;
-    margin: 0 8px; /* 序号和函数名之间的间距 */
+    margin: 0 8px; /* Khoảng cách giữa số thứ tự và tên hàm */
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -308,20 +309,20 @@ td.selected {
 }
 
 .item-index.error-index {
-    color: white; /* 错误序号使用白色文字 */
+    color: white; /* Số thứ tự lỗi sử dụng chữ trắng */
 }
 
 .index-preview {
-    display: flex; /* Flexbox for horizontal layout */
+    display: flex; /* Flexbox cho layout ngang */
     flex-direction: row;
-    gap: 10px; /* Spacing between preview items */
+    gap: 10px; /* Khoảng cách giữa các mục preview */
     margin: 5px;
     font-size: 0.9em;
     color: #ccc;
 }
 
 .index-preview-item {
-    /* Style for each preview item if needed */
+    /* Kiểu cho mỗi mục preview nếu cần */
 }
 
 
@@ -378,7 +379,7 @@ td.selected {
 
 #custom_temperature {
     flex: 1;
-    min-width: 150px; /* 防止过小时换行 */
+    min-width: 150px; /* Ngăn chặn wrap khi quá nhỏ */
 }
 .refresh-scroll-content {
     overflow-y: auto;
@@ -403,30 +404,30 @@ td.selected {
 .operation-list-container {
     display: flex;
     flex-direction: column;
-    gap: 5px; /* 操作项之间的间距 */
+    gap: 5px; /* Khoảng cách giữa các mục thao tác */
     margin-top: 10px;
 }
 
 .operation-item {
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #dee2e6; /* 分割线 */
+    border-bottom: 1px solid #dee2e6; /* Đường phân cách */
     padding: 8px 0;
 }
 
 .operation-item:last-child {
-    border-bottom: none; /* 最后一项不显示底部分割线 */
+    border-bottom: none; /* Mục cuối không hiển thị đường phân cách dưới */
 }
 
 .operation-detail {
     display: flex;
     flex-direction: row;
-    align-items: baseline; /* label 和 value 对齐 */
+    align-items: baseline; /* Căn chỉnh label và value */
     padding: 2px 0;
 }
 
 .operation-detail.data-detail {
-    flex-direction: column; /* 数据详情垂直排列 */
+    flex-direction: column; /* Chi tiết dữ liệu sắp xếp dọc */
 }
 
 .detail-label {
@@ -480,7 +481,7 @@ td.selected {
 
 
 
-/* 用于debug-log的样式 */
+/* Kiểu dùng cho debug-log */
 .debug-log-popup-container {
     display: flex;
     flex-direction: column;
@@ -556,7 +557,7 @@ td.selected {
     text-align: left;
 }
 
-/* 用于 popupMenu 的样式 */
+/* Kiểu dùng cho popupMenu */
 .dynamic-popup-menu {
     display: flex;
     z-index: 29999;
@@ -575,12 +576,12 @@ td.selected {
 }
 
 
-/* 用于debug-log的样式 */
+/* Kiểu dùng cho debug-log */
 /*.drag-table {*/
-/*    border-collapse: collapse; !* Important for single-line borders *!*/
+/*    border-collapse: collapse; !* Quan trọng để viền đơn *!*/
 /*    border: 1px solid #ccc;*/
 /*    margin-bottom: 20px;*/
-/*    width: 100%; !* Ensure table takes full width of container *!*/
+/*    width: 100%; !* Đảm bảo bảng chiếm toàn bộ chiều rộng container *!*/
 /*}*/
 
 /*.table-name {*/
@@ -591,13 +592,13 @@ td.selected {
 
 /*.drag-table thead th,*/
 /*.drag-table tbody th,*/
-/*.drag-table td { !* Apply borders to all header cells, row headers, and data cells *!*/
-/*    border: 1px solid #ccc; !* Add border to all cells *!*/
+/*.drag-table td { !* Áp dụng viền cho tất cả các ô tiêu đề, tiêu đề hàng và ô dữ liệu *!*/
+/*    border: 1px solid #ccc; !* Thêm viền cho tất cả các ô *!*/
 /*    padding: 4px 8px;*/
 /*    text-align: center;*/
-/*    min-width: 50px;   !* Minimum width for cells *!*/
-/*    min-height: 10px;  !* Minimum height for cells *!*/
-/*    box-sizing: border-box; !* Include padding and border in cell dimensions *!*/
+/*    min-width: 50px;   !* Chiều rộng tối thiểu cho ô *!*/
+/*    min-height: 10px;  !* Chiều cao tối thiểu cho ô *!*/
+/*    box-sizing: border-box; !* Bao gồm padding và viền trong kích thước ô *!*/
 /*}*/
 
 /*.drag-table thead th,*/
@@ -606,18 +607,14 @@ td.selected {
 /*    font-weight: bold;*/
 /*}*/
 
-/*.drag-table th { !* Ensure headers also have border *!*/
-/*    border: 1px solid #ccc; !* Redundant, but ensures clarity *!*/
+/*.drag-table th { !* Đảm bảo tiêu đề cũng có viền *!*/
+/*    border: 1px solid #ccc; !* Lặp lại để rõ ràng *!*/
 /*}*/
 
 /*.drag-cell {*/
-/*    !* Add any specific styling for data cells if needed *!*/
+/*    !* Thêm kiểu cụ thể cho ô dữ liệu nếu cần *!*/
 /*}*/
 
 /*.drag-table tbody tr {*/
-/*    min-height: 20px; !* Example minimum row height to accommodate cell height and padding, adjust if needed *!*/
+/*    min-height: 20px; !* Ví dụ chiều cao hàng tối thiểu để phù hợp với chiều cao ô và padding, chỉnh sửa nếu cần *!*/
 /*}*/
-
-
-
-
