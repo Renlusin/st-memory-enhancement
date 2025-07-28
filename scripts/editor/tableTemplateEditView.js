@@ -15,83 +15,82 @@ let scope = 'chat'
 
 const formConfigs = {
     sheet_origin: {
-        formTitle: "编辑表格",
-        formDescription: "单表格的整体设置。",
+        formTitle: "Chỉnh sửa bảng",
+        formDescription: "Cài đặt tổng thể cho một bảng đơn.",
         fields: [
 
         ]
     },
     column_header: {
-        formTitle: "编辑列",
-        formDescription: "设置列的标题和描述信息。",
+        formTitle: "Chỉnh sửa cột",
+        formDescription: "Cài đặt tiêu đề và thông tin mô tả cho cột.",
         fields: [
-            { label: '列标题', type: 'text', dataKey: 'value' },
-            { label: '不允许值重复', type: 'checkbox', dataKey: 'valueIsOnly' },
+            { label: 'Tiêu đề cột', type: 'text', dataKey: 'value' },
+            { label: 'Không cho phép giá trị trùng lặp', type: 'checkbox', dataKey: 'valueIsOnly' },
             {
-                label: '数据类型', type: 'select', dataKey: 'columnDataType',
+                label: 'Kiểu dữ liệu', type: 'select', dataKey: 'columnDataType',
                 options: [
-                    { value: 'text', text: '文本' },
-                    // { value: 'number', text: '数字' },
-                    // { value: 'option', text: '选项' },
+                    { value: 'text', text: 'Văn bản' },
+                    // { value: 'number', text: 'Số' },
+                    // { value: 'option', text: 'Lựa chọn' },
                 ]
             },
-            { label: '列描述', description: '', type: 'textarea', rows: 4, dataKey: 'columnNote' },
+            { label: 'Mô tả cột', description: '', type: 'textarea', rows: 4, dataKey: 'columnNote' },
         ],
     },
     row_header: {
-        formTitle: "编辑行",
-        formDescription: "设置行的标题和描述信息。",
+        formTitle: "Chỉnh sửa hàng",
+        formDescription: "Cài đặt tiêu đề và thông tin mô tả cho hàng.",
         fields: [
-            { label: '行标题', type: 'text', dataKey: 'value' },
-            { label: '行描述', description: '(给AI解释此行的作用)', type: 'textarea', rows: 4, dataKey: 'rowNote' },
+            { label: 'Tiêu đề hàng', type: 'text', dataKey: 'value' },
+            { label: 'Mô tả hàng', description: '(Giải thích cho AI về vai trò của hàng này)', type: 'textarea', rows: 4, dataKey: 'rowNote' },
         ],
     },
     cell: {
-        formTitle: "编辑单元格",
-        formDescription: "编辑单元格的具体内容。",
+        formTitle: "Chỉnh sửa ô",
+        formDescription: "Chỉnh sửa nội dung cụ thể của ô.",
         fields: [
-            { label: '单元格内容', type: 'textarea', dataKey: 'value' },
-            { label: '单元格描述', description: '(给AI解释此单元格内容的作用)', type: 'textarea', rows: 4, dataKey: 'cellPrompt' },
+            { label: 'Nội dung ô', type: 'textarea', dataKey: 'value' },
+            { label: 'Mô tả ô', description: '(Giải thích cho AI về vai trò của nội dung ô này)', type: 'textarea', rows: 4, dataKey: 'cellPrompt' },
         ],
     },
     sheetConfig: {
-        formTitle: "编辑表格属性",
-        formDescription: "设置表格的域、类型和名称。",
+        formTitle: "Chỉnh sửa thuộc tính bảng",
+        formDescription: "Cài đặt miền, loại và tên của bảng.",
         fields: [
             /* {
-                label: '默认保存位置', type: 'select', dataKey: 'domain',
+                label: 'Vị trí lưu mặc định', type: 'select', dataKey: 'domain',
                 options: [
-                    // { value: 'global', text: `<i class="fa-solid fa-earth-asia"></i> Global（该模板储存于用户数据中）` },
-                    // { value: 'role', text: `<i class="fa-solid fa-user-tag"></i> Role（该模板储存于当前所选角色）` },
-                    { value: 'chat', text: `<i class="fa-solid fa-comment"></i> Chat（该模板储存于当前对话）` },
+                    // { value: 'global', text: `<i class="fa-solid fa-earth-asia"></i> Global (Mẫu được lưu trong dữ liệu người dùng)` },
+                    // { value: 'role', text: `<i class="fa-solid fa-user-tag"></i> Role (Mẫu được lưu trong nhân vật hiện tại)` },
+                    { value: 'chat', text: `<i class="fa-solid fa-comment"></i> Chat (Mẫu được lưu trong cuộc hội thoại hiện tại)` },
                 ],
             }, */
             {
-                label: '类型', type: 'select', dataKey: 'type',
+                label: 'Loại', type: 'select', dataKey: 'type',
                 options: [
-                    // { value: 'free', text: `<i class="fa-solid fa-table"></i> Free（AI 可以任意修改此表格）` },
-                    { value: 'dynamic', text: `<i class="fa-solid fa-arrow-down-wide-short"></i> Dynamic（AI 可进行插入列外的所有操作）` },
-                    // { value: 'fixed', text: `<i class="fa-solid fa-thumbtack"></i> Fixed（AI 无法删除或插入行与列）` },
-                    // { value: 'static', text: `<i class="fa-solid fa-link"></i> Static（该表对 AI 为只读）` }
+                    // { value: 'free', text: `<i class="fa-solid fa-table"></i> Free (AI có thể tùy ý sửa đổi bảng này)` },
+                    { value: 'dynamic', text: `<i class="fa-solid fa-arrow-down-wide-short"></i> Dynamic (AI có thể thực hiện tất cả thao tác ngoài chèn cột)` },
+                    // { value: 'fixed', text: `<i class="fa-solid fa-thumbtack"></i> Fixed (AI không thể xóa hoặc chèn hàng và cột)` },
+                    // { value: 'static', text: `<i class="fa-solid fa-link"></i> Static (Bảng này chỉ đọc được với AI)` }
                 ],
             },
-            { label: '表格名', type: 'text', dataKey: 'name' },
-            { label: '表格说明（提示词）', type: 'textarea', rows: 6, dataKey: 'note', description: '(作为该表总体提示词，给AI解释此表格的作用)' },
-            { label: '是否必填', type: 'checkbox', dataKey: 'required' },
-            { label: '是否触发发送', type: 'checkbox', dataKey: 'triggerSend', },
-            { label: '触发发送深度', type: 'number', dataKey: 'triggerSendDeep' },
-            { label: '初始化提示词', type: 'textarea', rows: 4, dataKey: 'initNode', description: '（当该表格为必填，且表格为空时，会发送此提示词催促AI填表）' },
-            { label: '插入提示词', type: 'textarea', rows: 4, dataKey: 'insertNode', description: '' },
-            { label: '删除提示词', type: 'textarea', rows: 4, dataKey: 'deleteNode', description: '' },
-            { label: '更新提示词', type: 'textarea', rows: 4, dataKey: 'updateNode', description: '' },
+            { label: 'Tên bảng', type: 'text', dataKey: 'name' },
+            { label: 'Mô tả bảng (từ gợi ý)', type: 'textarea', rows: 6, dataKey: 'note', description: '(Là từ gợi ý tổng thể cho bảng, giải thích cho AI về vai trò của bảng này)' },
+            { label: 'Có bắt buộc điền không', type: 'checkbox', dataKey: 'required' },
+            { label: 'Có kích hoạt gửi không', type: 'checkbox', dataKey: 'triggerSend' },
+            { label: 'Độ sâu kích hoạt gửi', type: 'number', dataKey: 'triggerSendDeep' },
+            { label: 'Từ gợi ý khởi tạo', type: 'textarea', rows: 4, dataKey: 'initNode', description: '（Khi bảng là bắt buộc và trống, từ gợi ý này sẽ được gửi để yêu cầu AI điền bảng）' },
+            { label: 'Từ gợi ý chèn', type: 'textarea', rows: 4, dataKey: 'insertNode', description: '' },
+            { label: 'Từ gợi ý xóa', type: 'textarea', rows: 4, dataKey: 'deleteNode', description: '' },
+            { label: 'Từ gợi ý cập nhật', type: 'textarea', rows: 4, dataKey: 'updateNode', description: '' },
         ],
     },
 };
 
-
 async function updateDropdownElement() {
     const templates = getSheets();
-    // console.log("下滑模板", templates)
+    // console.log("Mẫu trượt xuống", templates)
     if (dropdownElement === null) {
         dropdownElement = document.createElement('select');
         dropdownElement.id = 'table_template';
@@ -130,7 +129,7 @@ function initChatScopeSelectedSheets() {
 function updateSelectedSheetUids() {
     if (scope === 'chat') {
         USER.saveChat()
-        console.log("这里触发的")
+        console.log("Đã kích hoạt tại đây")
         BASE.refreshContextView()
     }
     else USER.saveSettings();
@@ -162,13 +161,13 @@ function initializeSelect2Dropdown(dropdownElement) {
 
     $(dropdownElement).on('change', function (e, silent) {
         //if(silent || scope === 'chat') return
-        console.log("选择了",silent,$(this).val())
+        console.log("Đã chọn", silent, $(this).val())
         if (silent) return
         setSelectedSheetUids($(this).val())
         updateSelectedSheetUids()
     });
 
-    // 创建父级复选框与下拉框的关联
+    // Tạo mối liên kết giữa checkbox cha và dropdown
     const firstOptionText = $(dropdownElement).find('option:first-child').text();
     const tableMultipleSelectionDropdown = $('<span class="select2-option" style="width: 100%"></span>');
     const checkboxForParent = $('<input type="checkbox" class="select2-option-checkbox"/>');
@@ -200,7 +199,6 @@ export function updateSelectBySheetStatus() {
 
 let table_editor_container = null
 
-
 function bindSheetSetting(sheet, index) {
     const titleBar = document.createElement('div');
     titleBar.className = 'table-title-bar';
@@ -212,8 +210,8 @@ function bindSheetSetting(sheet, index) {
     titleBar.style.fontSize = '0.8rem';
     titleBar.style.fontWeight = 'normal';
 
-    // 表格基础设置按钮
-    const settingButton = $(`<i class="menu_button menu_button_icon fa-solid fa-wrench" style="cursor: pointer; height: 28px; width: 28px;" title="编辑表格属性"></i>`);
+    // Nút cài đặt cơ bản bảng
+    const settingButton = $(`<i class="menu_button menu_button_icon fa-solid fa-wrench" style="cursor: pointer; height: 28px; width: 28px;" title="Chỉnh sửa thuộc tính bảng"></i>`);
     settingButton.on('click', async () => {
         const initialData = {
             domain: sheet.domain,
@@ -229,24 +227,24 @@ function bindSheetSetting(sheet, index) {
             triggerSendDeep: sheet.triggerSendDeep
         };
         const formInstance = new Form(formConfigs.sheetConfig, initialData);
-        const popup = new EDITOR.Popup(formInstance.renderForm(), EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "保存", allowVerticalScrolling: true, cancelButton: "取消" });
+        const popup = new EDITOR.Popup(formInstance.renderForm(), EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Lưu", allowVerticalScrolling: true, cancelButton: "Hủy" });
 
         await popup.show();
         if (popup.result) {
             const diffData = compareDataDiff(formInstance.result(), initialData)
             console.log(diffData)
             let needRerender = false
-            // 将比较数据差异的结果更新至表格
+            // Cập nhật kết quả khác biệt dữ liệu vào bảng
             Object.keys(diffData).forEach(key => {
                 console.log(key)
                 if (['domain', 'type', 'name', 'required', 'triggerSend'].includes(key) && diffData[key] != null) {
-                    console.log("对比成功将更新" + key)
+                    console.log("So sánh thành công, sẽ cập nhật " + key)
                     sheet[key] = diffData[key];
                     if (key === 'name') needRerender = true
                 } else if (['note', 'initNode', 'insertNode', 'deleteNode', 'updateNode'].includes(key) && diffData[key] != null) {
                     sheet.data[key] = diffData[key];
                 } else if (['triggerSendDeep'].includes(key) && diffData[key] != null) {
-                    console.log("对比成功将更新" + key)
+                    console.log("So sánh thành công, sẽ cập nhật " + key)
                     sheet[key] = Math.max(0, Math.floor(diffData[key]));
                 }
             })
@@ -255,25 +253,25 @@ function bindSheetSetting(sheet, index) {
         }
     });
 
-    // 表格自定义样式按钮
-    const styleButton = $(`<i class="menu_button menu_button_icon fa-solid fa-wand-magic-sparkles" style="cursor: pointer; height: 28px; width: 28px;" title="编辑表格显示样式"></i>`);
+    // Nút kiểu tùy chỉnh bảng
+    const styleButton = $(`<i class="menu_button menu_button_icon fa-solid fa-wand-magic-sparkles" style="cursor: pointer; height: 28px; width: 28px;" title="Chỉnh sửa kiểu hiển thị bảng"></i>`);
     styleButton.on('click', async () => {
         await openSheetStyleRendererPopup(sheet);
     })
-    const nameSpan = $(`<span style="margin-left: 0px;">#${index} ${sheet.name ? sheet.name : 'Unnamed Table'}</span>`);
+    const nameSpan = $(`<span style="margin-left: 0px;">#${index} ${sheet.name ? sheet.name : 'Bảng không tên'}</span>`);
 
-    // 新增：发送到上下文的复选框
+    // Thêm: Checkbox gửi đến ngữ cảnh
     const sendToContextCheckbox = $(`
         <label class="checkbox_label" style="margin-left: 10px; font-weight: normal; color: var(--text_primary);">
             <input type="checkbox" class="send_to_context_switch" ${sheet.sendToContext !== false ? 'checked' : ''} />
-            <span data-i18n="Send to context">发送到上下文</span>
+            <span data-i18n="Send to context">Gửi đến ngữ cảnh</span>
         </label>
     `);
 
     sendToContextCheckbox.find('.send_to_context_switch').on('change', function() {
         sheet.sendToContext = $(this).prop('checked');
         sheet.save();
-        console.log(`表格 "${sheet.name}" 的 sendToContext 状态已更新为: ${sheet.sendToContext}`);
+        console.log(`Trạng thái sendToContext của bảng "${sheet.name}" đã được cập nhật thành: ${sheet.sendToContext}`);
     });
 
     titleBar.appendChild(settingButton[0]);
@@ -290,11 +288,10 @@ async function templateCellDataEdit(cell) {
     const formInstance = new Form(formConfigs[cell.type], initialData);
 
     formInstance.on('editRenderStyleEvent', (formData) => {
-        alert('编辑表格样式功能待实现' + JSON.stringify(formData));
+        alert('Chức năng chỉnh sửa kiểu bảng chưa được thực hiện' + JSON.stringify(formData));
     });
 
-
-    const popup = new EDITOR.Popup(formInstance.renderForm(), EDITOR.POPUP_TYPE.CONFIRM, { large: true, allowVerticalScrolling: true }, { okButton: "保存修改", cancelButton: "取消" });
+    const popup = new EDITOR.Popup(formInstance.renderForm(), EDITOR.POPUP_TYPE.CONFIRM, { large: true, allowVerticalScrolling: true }, { okButton: "Lưu thay đổi", cancelButton: "Hủy" });
 
     await popup.show();
     if (popup.result) {
@@ -313,14 +310,13 @@ async function templateCellDataEdit(cell) {
 }
 
 function handleAction(cell, action) {
-    console.log("开始执行操作")
+    console.log("Bắt đầu thực hiện thao tác")
     cell.newAction(action)
-    console.log("执行操作然后刷新")
+    console.log("Thực hiện thao tác rồi làm mới")
     refreshTempView();
-    // 如果是chat域，则刷新表格
+    // Nếu là miền chat, thì làm mới bảng
     if (scope === 'chat') BASE.refreshContextView()
 }
-
 
 function bindCellClickEvent(cell) {
     cell.on('click', async (event) => {
@@ -335,37 +331,37 @@ function bindCellClickEvent(cell) {
         const sheetType = cell.parent.type;
 
         if (rowIndex === 0 && colIndex === 0) {
-            cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-right"></i> 向右插入列', (e) => { handleAction(cell, Cell.CellAction.insertRightColumn) });
+            cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-right"></i> Chèn cột bên phải', (e) => { handleAction(cell, Cell.CellAction.insertRightColumn) });
             if (sheetType === SheetBase.SheetType.free || sheetType === SheetBase.SheetType.static) {
-                cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-down"></i> 向下插入行', (e) => { handleAction(cell, Cell.CellAction.insertDownRow) });
+                cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-down"></i> Chèn hàng bên dưới', (e) => { handleAction(cell, Cell.CellAction.insertDownRow) });
             }
         } else if (rowIndex === 0) {
-            cell.parent.currentPopupMenu.add('<i class="fa fa-i-cursor"></i> 编辑该列', async (e) => { await templateCellDataEdit(cell) });
-            cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-left"></i> 向左插入列', (e) => { handleAction(cell, Cell.CellAction.insertLeftColumn) });
-            cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-right"></i> 向右插入列', (e) => { handleAction(cell, Cell.CellAction.insertRightColumn) });
-            cell.parent.currentPopupMenu.add('<i class="fa fa-trash-alt"></i> 删除列', (e) => { handleAction(cell, Cell.CellAction.deleteSelfColumn) });
+            cell.parent.currentPopupMenu.add('<i class="fa fa-i-cursor"></i> Chỉnh sửa cột này', async (e) => { await templateCellDataEdit(cell) });
+            cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-left"></i> Chèn cột bên trái', (e) => { handleAction(cell, Cell.CellAction.insertLeftColumn) });
+            cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-right"></i> Chèn cột bên phải', (e) => { handleAction(cell, Cell.CellAction.insertRightColumn) });
+            cell.parent.currentPopupMenu.add('<i class="fa fa-trash-alt"></i> Xóa cột', (e) => { handleAction(cell, Cell.CellAction.deleteSelfColumn) });
         } else if (colIndex === 0) {
             // if (sheetType === cell.parent.SheetType.dynamic) {
             //     cell.element.delete();
             //     return;
             // }
 
-            cell.parent.currentPopupMenu.add('<i class="fa fa-i-cursor"></i> 编辑该行', async (e) => { await templateCellDataEdit(cell) });
+            cell.parent.currentPopupMenu.add('<i class="fa fa-i-cursor"></i> Chỉnh sửa hàng này', async (e) => { await templateCellDataEdit(cell) });
             if (sheetType === SheetBase.SheetType.free || sheetType === SheetBase.SheetType.static) {
-                cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-up"></i> 向上插入行', (e) => { handleAction(cell, Cell.CellAction.insertUpRow) });
-                cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-down"></i> 向下插入行', (e) => { handleAction(cell, Cell.CellAction.insertDownRow) });
-                cell.parent.currentPopupMenu.add('<i class="fa fa-trash-alt"></i> 删除行', (e) => { handleAction(cell, Cell.CellAction.deleteSelfRow) });
+                cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-up"></i> Chèn hàng bên trên', (e) => { handleAction(cell, Cell.CellAction.insertUpRow) });
+                cell.parent.currentPopupMenu.add('<i class="fa fa-arrow-down"></i> Chèn hàng bên dưới', (e) => { handleAction(cell, Cell.CellAction.insertDownRow) });
+                cell.parent.currentPopupMenu.add('<i class="fa fa-trash-alt"></i> Xóa hàng', (e) => { handleAction(cell, Cell.CellAction.deleteSelfRow) });
             }
         } else {
             if (sheetType === SheetBase.SheetType.static) {
-                cell.parent.currentPopupMenu.add('<i class="fa fa-i-cursor"></i> 编辑该单元格', async (e) => { await templateCellDataEdit(cell) });
+                cell.parent.currentPopupMenu.add('<i class="fa fa-i-cursor"></i> Chỉnh sửa ô này', async (e) => { await templateCellDataEdit(cell) });
             } else {
                 return;
             }
         }
 
         const element = event.target
-        // 备份当前cell的style，以便在菜单关闭时恢复
+        // Sao lưu style hiện tại của ô để khôi phục khi menu đóng
         const style = element.style.cssText;
         const rect = element.getBoundingClientRect();
         const dragSpaceRect = drag.dragSpace.getBoundingClientRect();
@@ -404,7 +400,6 @@ function getSheets() {
     return scope === 'chat' ? BASE.getChatSheets() : BASE.templates
 }
 
-
 async function updateDragTables() {
     if (!drag) return;
 
@@ -418,21 +413,21 @@ async function updateDragTables() {
     }
 
     container.empty();
-    console.log("dragSpace是什么", drag.dragSpace)
+    console.log("dragSpace là gì", drag.dragSpace)
 
     selectedSheetUids.forEach((uid, index) => {
 
         let sheetDataExists;
         if (scope === 'chat') {
-            // 检查 uid 是否存在于 BASE.sheetsData.context
+            // Kiểm tra xem uid có tồn tại trong BASE.sheetsData.context không
             sheetDataExists = BASE.sheetsData.context?.some(sheetData => sheetData.uid === uid);
         } else {
-            // 检查 uid 是否存在于 BASE.templates
+            // Kiểm tra xem uid có tồn tại trong BASE.templates không
             sheetDataExists = BASE.templates?.some(templateData => templateData.uid === uid);
         }
-        // 如果数据不存在，则记录警告并跳过此 uid
+        // Nếu dữ liệu không tồn tại, ghi cảnh báo và bỏ qua uid này
         if (!sheetDataExists) {
-            console.warn(`在 updateDragTables 中未找到 UID 为 ${uid} 的表格数据 (scope: ${scope})。跳过此表格。`);
+            console.warn(`Không tìm thấy dữ liệu bảng có UID là ${uid} trong updateDragTables (scope: ${scope}). Bỏ qua bảng này.`);
             return;
         }
 
@@ -442,7 +437,7 @@ async function updateDragTables() {
         sheet.currentPopupMenu = currentPopupMenu;
 
         // if (!sheet || !sheet.hashSheet) {
-        //     console.warn(`无法加载模板或模板数据为空，UID: ${uid}`);
+        //     console.warn(`Không thể tải mẫu hoặc dữ liệu mẫu trống, UID: ${uid}`);
         //     return
         // }
 
@@ -451,7 +446,7 @@ async function updateDragTables() {
         renderedTables.set(uid, tableElement);
         container.append(tableElement);
 
-        // 在添加表格后，添加 hr 元素
+        // Sau khi thêm bảng, thêm phần tử hr
         const hr = document.createElement('hr');
         tableElement.appendChild(hr);
 
@@ -472,7 +467,7 @@ export function updateTableContainerPosition() {
     // console.log("contentContainer", contentContainer)
     const sendFormHeight = document.querySelector('#send_form')?.getBoundingClientRect().height || 0;
     const rect = contentContainer.getBoundingClientRect();
-    // console.log("contentContainer 位置变化", rect, windowHeight, sendFormHeight)
+    // console.log("Vị trí contentContainer thay đổi", rect, windowHeight, sendFormHeight)
     contentContainer.style.position = 'flex';
     contentContainer.style.bottom = '0';
     contentContainer.style.left = '0';
@@ -482,7 +477,7 @@ export function updateTableContainerPosition() {
 
 export async function refreshTempView(ignoreGlobal = false) {
     if (ignoreGlobal && scope === 'global') return
-    console.log("刷新表格模板视图")
+    console.log("Làm mới giao diện mẫu bảng")
     await updateDropdownElement()
     initializeSelect2Dropdown(dropdownElement);
     await updateDragTables();
@@ -505,18 +500,18 @@ async function initTableEdit(mesId) {
     contentContainer.append(draggable);
     drag.add('tableContainer', tableContainer);
 
-    // 添加事件监听器
+    // Thêm trình nghe sự kiện
     contentContainer.addEventListener('mouseenter', updateTableContainerPosition);
     contentContainer.addEventListener('focus', updateTableContainerPosition);
 
     $(scopeSelect).val(scope).on('change', async function () {
         scope = $(this).val();
-        console.log("切换到", scope)
+        console.log("Chuyển sang", scope)
         await refreshTempView()
     })
 
     $(document).on('click', '#add_table_template_button', async function () {
-        console.log("触发")
+        console.log("Đã kích hoạt")
         let newTemplateUid = null
         let newTemplate = null
         if (scope === 'chat') {
@@ -534,7 +529,7 @@ async function initTableEdit(mesId) {
         else USER.saveSettings();
         await updateDropdownElement();
         //updateDragTables();
-        console.log("测试", [...currentSelectedValues, newTemplateUid])
+        console.log("Kiểm tra", [...currentSelectedValues, newTemplateUid])
         $(dropdownElement).val([...currentSelectedValues, newTemplateUid]).trigger("change", [true]);
         updateSelectedSheetUids()
     });
@@ -566,9 +561,9 @@ async function initTableEdit(mesId) {
 }
 
 export async function getEditView(mesId = -1) {
-    // 如果已经初始化过，直接返回缓存的容器，避免重复创建
+    // Nếu đã khởi tạo, trả về container được lưu trong bộ nhớ cache, tránh tạo lại
     if (table_editor_container) {
-        // 更新下拉菜单和表格，但不重新创建整个容器
+        // Cập nhật dropdown và bảng, nhưng không tạo lại toàn bộ container
         await refreshTempView(false);
         return table_editor_container;
     }
