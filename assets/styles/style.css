@@ -90,14 +90,17 @@
 
 .tableDom {
     border-collapse: collapse;
-    white-space: normal; /* Thay đổi từ nowrap thành normal để chữ có thể wrap (tách dòng) khi cần */
+    white-space: normal; /* Cho phép chữ wrap tự nhiên */
+    font-family: Arial, "Times New Roman", sans-serif; /* Đảm bảo hỗ trợ tiếng Việt */
 }
 
 .tableDom td,
 .tableDom th {
-    word-break: break-word;
+    border: 1px solid #4e4848;
+    padding: 3px 5px;
     white-space: normal;
-    hyphens: auto;
+    word-break: break-word;
+    overflow-wrap: anywhere; /* <-- cái này giúp cắt được từ "Yêuthương" thành "Yêu thương" nếu thiếu khoảng trắng */
 }
 
 td.selected {
@@ -184,9 +187,6 @@ td.selected {
     width: 100%;
 }
 
-
-
-
 /* popup */
 .popup-container {
     display: flex;
@@ -202,8 +202,6 @@ td.selected {
     overflow: hidden;
 }
 
-
-
 .history-title-bar {
     /* Kiểu thanh tiêu đề */
     padding-bottom: 10px;
@@ -217,7 +215,6 @@ td.selected {
     overflow-y: auto;
     flex-grow: 1;
 }
-
 
 .history-group {
     margin-bottom: 25px;
@@ -325,7 +322,6 @@ td.selected {
     /* Kiểu cho mỗi mục preview nếu cần */
 }
 
-
 .params-table {
     display: flex;
     flex-direction: row;
@@ -372,10 +368,6 @@ td.selected {
     border-left: 5px solid #f44336;
     background-color: #f44336;
 }
-
-
-
-
 
 #custom_temperature {
     flex: 1;
@@ -479,8 +471,6 @@ td.selected {
     word-break: break-word;
 }
 
-
-
 /* Kiểu dùng cho debug-log */
 .debug-log-popup-container {
     display: flex;
@@ -574,7 +564,6 @@ td.selected {
     justify-content: flex-start;
     align-items: center;
 }
-
 
 /* Kiểu dùng cho debug-log */
 /*.drag-table {*/
