@@ -1,6 +1,6 @@
 import { BASE, DERIVED, EDITOR, SYSTEM, USER } from '../../core/manager.js';
 import { updateSystemMessageTableStatus } from "../renderer/tablePushToChat.js";
-import { findNextChatWhitTableData,undoSheets } from "../../index.js";
+import { findNextChatWhitTableData, undoSheets } from "../../index.js";
 import { rebuildSheets } from "../runtime/absoluteRefresh.js";
 import { openTableHistoryPopup } from "./tableHistory.js";
 import { PopupMenu } from "../../components/popupMenu.js";
@@ -25,15 +25,15 @@ const userTableEditInfo = {
 }
 
 /**
- * 复制表格
- * @param {*} tables 所有表格数据
+ * Sao chép bảng
+ * @param {*} tables Dữ liệu của tất cả các bảng
  */
 export async function copyTable() {
     copyTableData = JSON.stringify(getTableJson({type:'chatSheets', version: 1}))
     if(!copyTableData) return
     $('#table_drawer_icon').click()
 
-    EDITOR.confirm(`正在复制表格数据 (#${SYSTEM.generateRandomString(4)})`, '取消', '粘贴到当前对话').then(async (r) => {
+    EDITOR.confirm(`Đang sao chép dữ liệu bảng (#${SYSTEM.generateRandomString(4)})`, 'Hủy', 'Dán vào hội thoại hiện tại').then(async (r) => {
         if (r) {
             await pasteTable()
         }
@@ -44,85 +44,85 @@ export async function copyTable() {
 }
 
 /**
- * 粘贴表格
- * @param {number} mesId 需要粘贴到的消息id
- * @param {Element} viewSheetsContainer 表格容器DOM
+ * Dán bảng
+ * @param {number} mesId ID của tin nhắn cần dán bảng vào
+ * @param {Element} viewSheetsContainer DOM của container bảng
  */
 async function pasteTable() {
     if (USER.getContext().chat.length === 0) {
-        EDITOR.error("没有记录载体，表格是保存在聊天记录中的，请聊至少一轮后再重试")
+        EDITOR.error("Không có vật chứa hồ sơ, bảng được lưu trong lịch sử chat, vui lòng chat ít nhất một vòng rồi thử lại")
         return
     }
-    const confirmation = await EDITOR.callGenericPopup('粘贴会清空原有的表格数据，是否继续？', EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "继续", cancelButton: "取消" });
+    const confirmation = await EDITOR.callGenericPopup('Dán sẽ xóa dữ liệu bảng hiện có, bạn có muốn tiếp tục không?', EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Tiếp tục", cancelButton: "Hủy" });
     if (confirmation) {
         if (copyTableData) {
             const tables = JSON.parse(copyTableData)
-            if(!tables.mate === 'chatSheets')  return EDITOR.error("导入失败：文件格式不正确")
+            if(!tables.mate === 'chatSheets')  return EDITOR.error("Nhập thất bại: Định dạng file không đúng")
             BASE.applyJsonToChatSheets(tables)
             await renderSheetsDOM()
-            EDITOR.success('粘贴成功')
+            EDITOR.success('Dán thành công')
         } else {
-            EDITOR.error("粘贴失败：剪切板没有表格数据")
+            EDITOR.error("Dán thất bại: Không có dữ liệu bảng trong clipboard")
         }
     }
 }
 
 /**
- * 导入表格
- * @param {number} mesId 需要导入表格的消息id
+ * Nhập bảng
+ * @param {number} mesId ID của tin nhắn cần nhập bảng
  */
 async function importTable(mesId, viewSheetsContainer) {
     if (mesId === -1) {
-        EDITOR.error("没有记录载体，表格是保存在聊天记录中的，请聊至少一轮后再重试")
+        EDITOR.error("Không có vật chứa hồ sơ, bảng được lưu trong lịch sử chat, vui lòng chat ít nhất một vòng rồi thử lại")
         return
     }
 
-    // 1. 创建一个 input 元素，类型设置为 'file'，用于文件选择
+    // 1. Tạo một phần tử input, đặt type là 'file' để chọn file
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    // 设置 accept 属性，限制只能选择 JSON 文件，提高用户体验
+    // Đặt thuộc tính accept để giới hạn chỉ chọn file JSON, cải thiện trải nghiệm người dùng
     fileInput.accept = '.json';
 
-    // 2. 添加事件监听器，监听文件选择的变化 (change 事件)
+    // 2. Thêm trình nghe sự kiện để theo dõi thay đổi khi chọn file (sự kiện change)
     fileInput.addEventListener('change', function (event) {
-        // 获取用户选择的文件列表 (FileList 对象)
+        // Lấy danh sách file được chọn (đối tượng FileList)
         const files = event.target.files;
 
-        // 检查是否选择了文件
+        // Kiểm tra xem có file được chọn không
         if (files && files.length > 0) {
-            // 获取用户选择的第一个文件 (这里假设只选择一个 JSON 文件)
+            // Lấy file đầu tiên được chọn (giả sử chỉ chọn một file JSON)
             const file = files[0];
 
-            // 3. 创建 FileReader 对象，用于读取文件内容
+            // 3. Tạo đối tượng FileReader để đọc nội dung file
             const reader = new FileReader();
 
-            // 4. 定义 FileReader 的 onload 事件处理函数
-            // 当文件读取成功后，会触发 onload 事件
+            // 4. Định nghĩa hàm xử lý sự kiện onload của FileReader
+            // Sự kiện onload được kích hoạt khi file được đọc thành công
             reader.onload = async function (loadEvent) {
-                const button = { text: '导入模板及数据', result: 3 }
-                const popup = new EDITOR.Popup("请选择导入的部分", EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "导入模板及数据", cancelButton: "取消"});
+                const button = { text: 'Nhập mẫu và dữ liệu', result: 3 }
+                const popup = new EDITOR.Popup("Vui lòng chọn phần cần nhập", EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Nhập mẫu và dữ liệu", cancelButton: "Hủy"});
                 const result = await popup.show()
                 if (result) {
                         const tables = JSON.parse(loadEvent.target.result)
-                        console.log("导入内容", tables, tables.mate, !(tables.mate === 'chatSheets'))
-                        if(!(tables.mate?.type === 'chatSheets'))  return EDITOR.error("导入失败：文件格式不正确", "请检查你导入的是否是表格数据")
+                        console.log("Nội dung nhập", tables, tables.mate, !(tables.mate === 'chatSheets'))
+                        if(!(tables.mate?.type === 'chatSheets'))  return EDITOR.error("Nhập thất bại: Định dạng file không đúng", "Vui lòng kiểm tra xem file bạn nhập có phải là dữ liệu bảng không")
                         if(result === 3)
                             BASE.applyJsonToChatSheets(tables, "data")
                         else
                             BASE.applyJsonToChatSheets(tables)
                         await renderSheetsDOM()
-                        EDITOR.success('导入成功')
+                        EDITOR.success('Nhập thành công')
                 }
             };
-            reader.readAsText(file, 'UTF-8'); // 建议指定 UTF-8 编码，确保中文等字符正常读取
+            reader.readAsText(file, 'UTF-8'); // Đề xuất chỉ định mã hóa UTF-8 để đảm bảo đọc đúng các ký tự tiếng Việt, v.v.
         }
     });
     fileInput.click();
 }
 
 /**
- * 导出表格
- * @param {Array} tables 所有表格数据
+ * Xuất bảng
+ * @param {Array} tables Dữ liệu của tất cả các bảng
  */
 async function exportTable() {
     const jsonTables = getTableJson({type:'chatSheets', version: 1})
@@ -132,22 +132,22 @@ async function exportTable() {
     const url = URL.createObjectURL(blob);
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
-    downloadLink.download = 'table_data.json'; // 默认文件名
-    document.body.appendChild(downloadLink); // 必须添加到 DOM 才能触发下载
+    downloadLink.download = 'table_data.json'; // Tên file mặc định
+    document.body.appendChild(downloadLink); // Phải thêm vào DOM để kích hoạt tải xuống
     downloadLink.click();
-    document.body.removeChild(downloadLink); // 下载完成后移除
+    document.body.removeChild(downloadLink); // Xóa sau khi tải xong
 
-    URL.revokeObjectURL(url); // 释放 URL 对象
+    URL.revokeObjectURL(url); // Giải phóng đối tượng URL
 
-    EDITOR.success('已导出');
+    EDITOR.success('Đã xuất');
 }
 
 /**
- * 获取表格Json数据
+ * Lấy dữ liệu JSON của bảng
  */
 function getTableJson(mate) {
     if (!DERIVED.any.renderingSheets || DERIVED.any.renderingSheets.length === 0) {
-        EDITOR.warning('当前表格没有数据，无法导出');
+        EDITOR.warning('Bảng hiện tại không có dữ liệu, không thể xuất');
         return;
     }
     const sheets = DERIVED.any.renderingSheets.filter(sheet => sheet.enable)
@@ -161,13 +161,13 @@ function getTableJson(mate) {
 }
 
 /**
- * 清空表格
- * @param {number} mesId 需要清空表格的消息id
- * @param {Element} viewSheetsContainer 表格容器DOM
+ * Xóa bảng
+ * @param {number} mesId ID của tin nhắn cần xóa bảng
+ * @param {Element} viewSheetsContainer DOM của container bảng
  */
 async function clearTable(mesId, viewSheetsContainer) {
     if (mesId === -1) return
-    const confirmation = await EDITOR.callGenericPopup('清空当前对话的所有表格数据，并重置历史记录，该操作无法回退，是否继续？', EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "继续", cancelButton: "取消" });
+    const confirmation = await EDITOR.callGenericPopup('Xóa tất cả dữ liệu bảng của hội thoại hiện tại và đặt lại lịch sử, thao tác này không thể hoàn tác, bạn có muốn tiếp tục không?', EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Tiếp tục", cancelButton: "Hủy" });
     if (confirmation) {
         await USER.getContext().chat.forEach((piece => {
             if (piece.hash_sheets) {
@@ -179,37 +179,37 @@ async function clearTable(mesId, viewSheetsContainer) {
             USER.saveSettings()
             USER.saveChat();
             refreshContextView()
-            EDITOR.success("表格数据清除成功")
-            console.log("已清除表格数据")
+            EDITOR.success("Dữ liệu bảng đã được xóa thành công")
+            console.log("Đã xóa dữ liệu bảng")
         }, 100)
     }
 }
 
 /**
- * 设置表格编辑Tips
- * @param {Element} tableEditTips 表格编辑提示DOM
+ * Đặt gợi ý chỉnh sửa bảng
+ * @param {Element} tableEditTips DOM của gợi ý chỉnh sửa bảng
  */
 function setTableEditTips(tableEditTips) {
     /* if (!tableEditTips || tableEditTips.length === 0) {
-        console.error('tableEditTips is null or empty jQuery object');
+        console.error('tableEditTips là null hoặc là đối tượng jQuery rỗng');
         return;
     }
-    const tips = $(tableEditTips); // 确保 tableEditTips 是 jQuery 对象
+    const tips = $(tableEditTips); // Đảm bảo tableEditTips là đối tượng jQuery
     tips.empty();
     if (USER.tableBaseSetting.isExtensionAble === false) {
-        tips.append('目前插件已关闭，将不会要求AI更新表格。');
+        tips.append('Hiện tại plugin đã bị tắt, sẽ không yêu cầu AI cập nhật bảng.');
         tips.css("color", "rgb(211 39 39)");
     } else if (userTableEditInfo.editAble) {
-        tips.append('点击单元格选择编辑操作。绿色单元格为本轮插入，蓝色单元格为本轮修改。');
+        tips.append('Nhấp vào ô để chọn thao tác chỉnh sửa. Ô màu xanh lá là ô được chèn trong vòng này, ô màu xanh dương là ô được sửa đổi trong vòng này.');
         tips.css("color", "lightgreen");
     } else {
-        tips.append('此表格为中间表格，为避免混乱，不可被编辑和粘贴。你可以打开最新消息的表格进行编辑');
+        tips.append('Bảng này là bảng trung gian, để tránh nhầm lẫn, không thể chỉnh sửa hoặc dán. Bạn có thể mở bảng của tin nhắn mới nhất để chỉnh sửa');
         tips.css("color", "lightyellow");
     } */
 }
 
 async function cellDataEdit(cell) {
-    const result = await EDITOR.callGenericPopup("编辑单元格", EDITOR.POPUP_TYPE.INPUT, cell.data.value, { rows: 3 })
+    const result = await EDITOR.callGenericPopup("Chỉnh sửa ô", EDITOR.POPUP_TYPE.INPUT, cell.data.value, { rows: 3 })
     if (result) {
         cell.editCellData({ value: result })
         refreshContextView();
@@ -217,22 +217,21 @@ async function cellDataEdit(cell) {
     }
 }
 
-
 async function columnDataEdit(cell) {
     const columnEditor = `
 <div class="column-editor">
     <div class="column-editor-header">
-        <h3>编辑列数据</h3>
+        <h3>Chỉnh sửa dữ liệu cột</h3>
     </div>
     <div class="column-editor-body">
         <div class="column-editor-content">
-            <label for="column-editor-input">列数据:</label>
+            <label for="column-editor-input">Dữ liệu cột:</label>
             <textarea id="column-editor-input" rows="5"></textarea>
         </div>
     </div>
 </div>
 `
-    const columnCellDataPopup = new EDITOR.Popup(columnEditor, EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "应用修改", cancelButton: "取消" });
+    const columnCellDataPopup = new EDITOR.Popup(columnEditor, EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Áp dụng thay đổi", cancelButton: "Hủy" });
     const historyContainer = $(columnCellDataPopup.dlg)[0];
 
     await columnCellDataPopup.show();
@@ -246,7 +245,7 @@ async function columnDataEdit(cell) {
 function batchEditMode(cell) {
     DERIVED.any.batchEditMode = true;
     DERIVED.any.batchEditModeSheet = cell.parent;
-    EDITOR.confirm(`正在编辑 #${cell.parent.name} 的行`, '取消', '完成').then((r) => {
+    EDITOR.confirm(`Đang chỉnh sửa hàng của #${cell.parent.name}`, 'Hủy', 'Hoàn tất').then((r) => {
         DERIVED.any.batchEditMode = false;
         DERIVED.any.batchEditModeSheet = null;
         renderSheetsDOM();
@@ -254,13 +253,13 @@ function batchEditMode(cell) {
     renderSheetsDOM();
 }
 
-// 新的事件处理函数
+// Hàm xử lý sự kiện mới
 export function cellClickEditModeEvent(cell) {
     cell.element.style.cursor = 'pointer'
     if (cell.type === Cell.CellType.row_header) {
         cell.element.textContent = ''
 
-        // 在 cell.element 中添加三个 div，一个用于显示排序，一个用于显示锁定按钮，一个用于显示删除按钮
+        // Thêm ba div vào cell.element: một để hiển thị thứ tự, một cho nút khóa, và một cho nút xóa
         const containerDiv = $(`<div class="flex-container" style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;"></div>`)
         const rightDiv = $(`<div class="flex-container" style="margin-right: 3px"></div>`)
         const indexDiv = $(`<span class="menu_button_icon interactable" style="margin: 0; padding: 0 6px; cursor: move; color: var(--SmartThemeBodyColor)">${cell.position[0]}</span>`)
@@ -320,8 +319,8 @@ export function cellClickEditModeEvent(cell) {
     })
 }
 
-async function confirmAction(event, text = '是否继续该操作？') {
-    const confirmation = new EDITOR.Popup(text, EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "继续", cancelButton: "取消" });
+async function confirmAction(event, text = 'Bạn có muốn tiếp tục thao tác này không?') {
+    const confirmation = new EDITOR.Popup(text, EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Tiếp tục", cancelButton: "Hủy" });
 
     await confirmation.show();
     if (!confirmation.result) return { filterData: null, confirmation: false };
@@ -329,12 +328,12 @@ async function confirmAction(event, text = '是否继续该操作？') {
 }
 
 /**
- * 单元格高亮
+ * Tô sáng ô
  */
 export function cellHighlight(sheet) {
     if(!lastCellsHashSheet) return;
     const lastHashSheet = lastCellsHashSheet[sheet.uid] || []
-    if ((sheet.hashSheet.length < 2) && (lastHashSheet.length < 2)) return;    //表格内容为空的时候不执行后续函数,提高健壮性
+    if ((sheet.hashSheet.length < 2) && (lastHashSheet.length < 2)) return;    // Khi nội dung bảng trống, không thực thi các hàm tiếp theo để tăng tính mạnh mẽ
     const hashSheetFlat = sheet.hashSheet.flat()
     const lastHashSheetFlat = lastHashSheet.flat()
     let deleteRow = []
@@ -393,7 +392,7 @@ async function cellHistoryView(cell) {
 }
 
 /**
- * 自定义表格样式事件
+ * Sự kiện tùy chỉnh kiểu bảng
  * @param {*} cell
  */
 async function customSheetStyle(cell) {
@@ -404,7 +403,7 @@ async function customSheetStyle(cell) {
 function cellClickEvent(cell) {
     cell.element.style.cursor = 'pointer'
 
-    // 判断是否需要根据历史数据进行高亮
+    // Xác định xem có cần tô sáng dựa trên dữ liệu lịch sử không
     /* const lastCellUid = lastCellsHashSheet.has(cell.uid)
     if (!lastCellUid) {
         cell.element.style.backgroundColor = '#00ff0011'
@@ -417,7 +416,7 @@ function cellClickEvent(cell) {
         event.stopPropagation();
         event.preventDefault();
 
-        // 重新获取hash
+        // Lấy lại hash
         BASE.getLastestSheets()
 
         if (cell.parent.currentPopupMenu) {
@@ -431,46 +430,46 @@ function cellClickEvent(cell) {
         const sheetType = cell.parent.type;
 
         if (rowIndex === 0 && colIndex === 0) {
-            menu.add('<i class="fa-solid fa-bars-staggered"></i> 批量行编辑', () => batchEditMode(cell));
-            menu.add('<i class="fa fa-arrow-right"></i> 向右插入列', () => handleAction(cell, Cell.CellAction.insertRightColumn));
-            menu.add('<i class="fa fa-arrow-down"></i> 向下插入行', () => handleAction(cell, Cell.CellAction.insertDownRow));
-            menu.add('<i class="fa-solid fa-wand-magic-sparkles"></i> 自定义表格样式', async () => customSheetStyle(cell));
+            menu.add('<i class="fa-solid fa-bars-staggered"></i> Chỉnh sửa hàng loạt', () => batchEditMode(cell));
+            menu.add('<i class="fa fa-arrow-right"></i> Chèn cột bên phải', () => handleAction(cell, Cell.CellAction.insertRightColumn));
+            menu.add('<i class="fa fa-arrow-down"></i> Chèn hàng bên dưới', () => handleAction(cell, Cell.CellAction.insertDownRow));
+            menu.add('<i class="fa-solid fa-wand-magic-sparkles"></i> Tùy chỉnh kiểu bảng', async () => customSheetStyle(cell));
         } else if (colIndex === 0) {
-            menu.add('<i class="fa-solid fa-bars-staggered"></i> 批量行编辑', () => batchEditMode(cell));
-            menu.add('<i class="fa fa-arrow-up"></i> 向上插入行', () => handleAction(cell, Cell.CellAction.insertUpRow));
-            menu.add('<i class="fa fa-arrow-down"></i> 向下插入行', () => handleAction(cell, Cell.CellAction.insertDownRow));
-            menu.add('<i class="fa fa-trash-alt"></i> 删除行', () => handleAction(cell, Cell.CellAction.deleteSelfRow), menu.ItemType.warning)
+            menu.add('<i class="fa-solid fa-bars-staggered"></i> Chỉnh sửa hàng loạt', () => batchEditMode(cell));
+            menu.add('<i class="fa fa-arrow-up"></i> Chèn hàng bên trên', () => handleAction(cell, Cell.CellAction.insertUpRow));
+            menu.add('<i class="fa fa-arrow-down"></i> Chèn hàng bên dưới', () => handleAction(cell, Cell.CellAction.insertDownRow));
+            menu.add('<i class="fa fa-trash-alt"></i> Xóa hàng', () => handleAction(cell, Cell.CellAction.deleteSelfRow), menu.ItemType.warning)
         } else if (rowIndex === 0) {
-            menu.add('<i class="fa fa-i-cursor"></i> 编辑该列', async () => await cellDataEdit(cell));
-            menu.add('<i class="fa fa-arrow-left"></i> 向左插入列', () => handleAction(cell, Cell.CellAction.insertLeftColumn));
-            menu.add('<i class="fa fa-arrow-right"></i> 向右插入列', () => handleAction(cell, Cell.CellAction.insertRightColumn));
-            menu.add('<i class="fa fa-trash-alt"></i> 删除列', () => confirmAction(() => { handleAction(cell, Cell.CellAction.deleteSelfColumn) }, '确认删除列？'), menu.ItemType.warning);
+            menu.add('<i class="fa fa-i-cursor"></i> Chỉnh sửa cột này', async () => await cellDataEdit(cell));
+            menu.add('<i class="fa fa-arrow-left"></i> Chèn cột bên trái', () => handleAction(cell, Cell.CellAction.insertLeftColumn));
+            menu.add('<i class="fa fa-arrow-right"></i> Chèn cột bên phải', () => handleAction(cell, Cell.CellAction.insertRightColumn));
+            menu.add('<i class="fa fa-trash-alt"></i> Xóa cột', () => confirmAction(() => { handleAction(cell, Cell.CellAction.deleteSelfColumn) }, 'Xác nhận xóa cột?'), menu.ItemType.warning);
         } else {
-            menu.add('<i class="fa fa-i-cursor"></i> 编辑该单元格', async () => await cellDataEdit(cell));
-            menu.add('<i class="fa-solid fa-clock-rotate-left"></i> 单元格历史记录', async () => await cellHistoryView(cell));
+            menu.add('<i class="fa fa-i-cursor"></i> Chỉnh sửa ô này', async () => await cellDataEdit(cell));
+            menu.add('<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử ô', async () => await cellHistoryView(cell));
         }
 
-        // 设置弹出菜单后的一些非功能性派生操作，这里必须使用setTimeout，否则会导致菜单无法正常显示
+        // Một số thao tác phái sinh không mang tính chức năng sau khi thiết lập menu bật lên, phải sử dụng setTimeout để đảm bảo menu hiển thị đúng
         setTimeout(() => {
 
         }, 0)
 
         const element = event.target
 
-        // 备份当前cell的style，以便在菜单关闭时恢复
+        // Sao lưu style hiện tại của ô để khôi phục khi menu đóng
         const style = element.style.cssText;
 
-        // 获取单元格位置
+        // Lấy vị trí ô
         const rect = element.getBoundingClientRect();
         const tableRect = viewSheetsContainer.getBoundingClientRect();
 
-        // 计算菜单位置（相对于表格容器）
+        // Tính toán vị trí menu (tương đối với container bảng)
         const menuLeft = rect.left - tableRect.left;
         const menuTop = rect.bottom - tableRect.top;
         const menuElement = menu.renderMenu();
         $(viewSheetsContainer).append(menuElement);
 
-        // 高亮cell
+        // Tô sáng ô
         element.style.backgroundColor = 'var(--SmartThemeUserMesBlurTintColor)';
         element.style.color = 'var(--SmartThemeQuoteColor)';
         element.style.outline = '1px solid var(--SmartThemeQuoteColor)';
@@ -480,11 +479,11 @@ function cellClickEvent(cell) {
             element.style.cssText = style;
         })
         menu.frameUpdate((menu) => {
-            // 重新定位菜单
+            // Định vị lại menu
             const rect = element.getBoundingClientRect();
             const tableRect = viewSheetsContainer.getBoundingClientRect();
 
-            // 计算菜单位置（相对于表格容器）
+            // Tính toán vị trí menu (tương đối với container bảng)
             const menuLeft = rect.left - tableRect.left;
             const menuTop = rect.bottom - tableRect.top;
             menu.popupContainer.style.left = `${menuLeft}px`;
@@ -492,21 +491,15 @@ function cellClickEvent(cell) {
         })
     })
     cell.on('', () => {
-        console.log('cell发生了改变:', cell)
+        console.log('Ô đã thay đổi:', cell)
     })
-}
-
-function handleAction(cell, action) {
-    cell.newAction(action)
-    refreshContextView();
-    if(cell.type === Cell.CellType.column_header) BASE.refreshTempView(true)
 }
 
 export async function renderEditableSheetsDOM(_sheets, _viewSheetsContainer, _cellClickEvent = cellClickEvent) {
     for (let [index, sheet] of _sheets.entries()) {
         if (!sheet.enable) continue
         const instance = sheet
-        console.log("渲染：", instance)
+        console.log("Đang render:", instance)
         const sheetContainer = document.createElement('div')
         const sheetTitleText = document.createElement('h3')
         sheetContainer.style.overflowX = 'none'
@@ -530,7 +523,7 @@ export async function renderEditableSheetsDOM(_sheets, _viewSheetsContainer, _ce
             sheetElement = await instance.renderSheet(_cellClickEvent)
         }
         cellHighlight(instance)
-        console.log("渲染表格：", sheetElement)
+        console.log("Render bảng:", sheetElement)
         $(sheetContainer).append(sheetElement)
 
         $(_viewSheetsContainer).append(sheetTitleText)
@@ -540,21 +533,20 @@ export async function renderEditableSheetsDOM(_sheets, _viewSheetsContainer, _ce
 }
 
 /**
- * 恢复表格
- * @param {number} mesId 需要清空表格的消息id
- * @param {Element} tableContainer 表格容器DOM
+ * Khôi phục bảng
+ * @param {number} mesId ID của tin nhắn cần xóa bảng
+ * @param {Element} tableContainer DOM của container bảng
  */
 async function undoTable(mesId, tableContainer) {
     if (mesId === -1) return
-    //const button = { text: '撤销10轮', result: 3 }
-    const popup = new EDITOR.Popup("撤销指定轮次内的所有手动修改及重整理数据，恢复表格", EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "撤销本轮", cancelButton: "取消" });
+    //const button = { text: 'Hoàn tác 10 vòng', result: 3 }
+    const popup = new EDITOR.Popup("Hoàn tác tất cả các chỉnh sửa thủ công và dữ liệu tái tổ chức trong số vòng được chỉ định, khôi phục bảng", EDITOR.POPUP_TYPE.CONFIRM, '', { okButton: "Hoàn tác vòng này", cancelButton: "Hủy" });
     const result = await popup.show()
     if (result) {
         await undoSheets(0)
-        EDITOR.success('恢复成功')
+        EDITOR.success('Khôi phục thành công')
     }
 }
-
 
 async function renderSheetsDOM(mesId = -1) {
     const task = new SYSTEM.taskTiming('renderSheetsDOM_task')
@@ -581,7 +573,7 @@ async function renderSheetsDOM(mesId = -1) {
     console.log('renderSheetsDOM:', piece, sheets)
     DERIVED.any.renderingSheets = sheets
     task.log()
-    // 用于记录上一次的hash_sheets，渲染时根据上一次的hash_sheets进行高亮
+    // Dùng để ghi lại hash_sheets trước đó, khi render sẽ tô sáng dựa trên hash_sheets trước đó
     if(deep != 0) {
         lastCellsHashSheet = BASE.getLastSheetsPiece(deep - 1, 3, false)?.piece.hash_sheets;
         if (lastCellsHashSheet) {
@@ -593,7 +585,7 @@ async function renderSheetsDOM(mesId = -1) {
     $(viewSheetsContainer).empty()
     viewSheetsContainer.style.paddingBottom = '150px'
     renderEditableSheetsDOM(sheets, viewSheetsContainer,DERIVED.any.isRenderLastest?undefined:()=>{})
-    $("#table_indicator").text(DERIVED.any.isRenderLastest ? "现在是可修改的活动表格" : `现在是第${deep}轮对话中的旧表格，不可被更改`)
+    $("#table_indicator").text(DERIVED.any.isRenderLastest ? "Hiện tại là bảng hoạt động có thể chỉnh sửa" : `Hiện tại là bảng cũ trong vòng hội thoại thứ ${deep}, không thể chỉnh sửa`)
     task.log()
 }
 
@@ -601,62 +593,62 @@ let initializedTableView = null
 async function initTableView(mesId) {
     initializedTableView = $(await SYSTEM.getTemplate('manager')).get(0);
     viewSheetsContainer = initializedTableView.querySelector('#tableContainer');
-    // setTableEditTips($(initializedTableView).find('#tableEditTips'));    // 确保在 table_manager_container 存在的情况下查找 tableEditTips
+    // setTableEditTips($(initializedTableView).find('#tableEditTips'));    // Đảm bảo tìm tableEditTips trong trường hợp table_manager_container tồn tại
 
-    // 设置编辑提示
-    // 点击打开查看表格数据统计
+    // Thiết lập gợi ý chỉnh sửa
+    // Nhấp để mở xem thống kê dữ liệu bảng
     $(document).on('click', '#table_data_statistics_button', function () {
-        EDITOR.tryBlock(openTableStatisticsPopup, "打开表格统计失败")
+        EDITOR.tryBlock(openTableStatisticsPopup, "Mở thống kê bảng thất bại")
     })
-    // 点击打开查看表格历史按钮
+    // Nhấp để mở nút xem lịch sử bảng
     $(document).on('click', '#dataTable_history_button', function () {
-        EDITOR.tryBlock(openTableHistoryPopup, "打开表格历史失败")
+        EDITOR.tryBlock(openTableHistoryPopup, "Mở lịch sử bảng thất bại")
     })
-    // 点击清空表格按钮
+    // Nhấp vào nút xóa bảng
     $(document).on('click', '#clear_table_button', function () {
-        EDITOR.tryBlock(clearTable, "清空表格失败", userTableEditInfo.chatIndex, viewSheetsContainer);
+        EDITOR.tryBlock(clearTable, "Xóa bảng thất bại", userTableEditInfo.chatIndex, viewSheetsContainer);
     })
     $(document).on('click', '#table_rebuild_button', function () {
-        EDITOR.tryBlock(rebuildSheets, "重建表格失败");
+        EDITOR.tryBlock(rebuildSheets, "Tái xây dựng bảng thất bại");
     })
-    // 点击编辑表格按钮
+    // Nhấp vào nút chỉnh sửa bảng
     $(document).on('click', '#table_edit_mode_button', function () {
         // openTableEditorPopup();
     })
-    // 点击恢复表格按钮
+    // Nhấp vào nút khôi phục bảng
     $(document).on('click', '#table_undo', function () {
-        EDITOR.tryBlock(undoTable, "恢复表格失败");
+        EDITOR.tryBlock(undoTable, "Khôi phục bảng thất bại");
     })
-    // 点击复制表格按钮
+    // Nhấp vào nút sao chép bảng
     $(document).on('click', '#copy_table_button', function () {
-        EDITOR.tryBlock(copyTable, "复制表格失败");
+        EDITOR.tryBlock(copyTable, "Sao chép bảng thất bại");
     })
-    // 点击导入表格按钮
+    // Nhấp vào nút nhập bảng
     $(document).on('click', '#import_table_button', function () {
-        EDITOR.tryBlock(importTable, "导入表格失败", userTableEditInfo.chatIndex, viewSheetsContainer);
+        EDITOR.tryBlock(importTable, "Nhập bảng thất bại", userTableEditInfo.chatIndex, viewSheetsContainer);
     })
-    // 点击导出表格按钮
+    // Nhấp vào nút xuất bảng
     $(document).on('click', '#export_table_button', function () {
-        EDITOR.tryBlock(exportTable, "导出表格失败");
+        EDITOR.tryBlock(exportTable, "Xuất bảng thất bại");
     })
-    // 点击前表按钮
+    // Nhấp vào nút bảng trước
     $(document).on('click', '#table_prev_button', function () {
         const deep = DERIVED.any.renderDeep;
         const { deep: prevDeep }  = BASE.getLastSheetsPiece(deep - 1, 20, false);
         if (prevDeep === -1) {
-            EDITOR.error("没有更多的表格数据了")
+            EDITOR.error("Không còn dữ liệu bảng nào nữa")
             return
         }
         renderSheetsDOM(prevDeep);
     })
 
-    // 点击后表按钮
+    // Nhấp vào nút bảng sau
     $(document).on('click', '#table_next_button', function () {
         const deep = DERIVED.any.renderDeep;
-        console.log("当前深度：", deep)
+        console.log("Độ sâu hiện tại:", deep)
         const { deep: nextDeep }  = BASE.getLastSheetsPiece(deep + 1, 20, false, "down");
         if (nextDeep === -1) {
-            EDITOR.error("没有更多的表格数据了")
+            EDITOR.error("Không còn dữ liệu bảng nào nữa")
             return
         }
         renderSheetsDOM(nextDeep);
@@ -669,14 +661,14 @@ export async function refreshContextView(mesId = -1) {
     if(BASE.contextViewRefreshing) return
     BASE.contextViewRefreshing = true
     await renderSheetsDOM(mesId);
-    console.log("刷新表格视图")
+    console.log("Làm mới giao diện bảng")
     BASE.contextViewRefreshing = false
 }
 
 export async function getChatSheetsView(mesId = -1) {
-    // 如果已经初始化过，直接返回缓存的容器，避免重复创建
+    // Nếu đã khởi tạo, trả về container được lưu trong bộ nhớ cache, tránh tạo lại
     if (initializedTableView) {
-        // 更新表格内容，但不重新创建整个容器
+        // Cập nhật nội dung bảng, nhưng không tạo lại toàn bộ container
         await renderSheetsDOM();
         return initializedTableView;
     }
