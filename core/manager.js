@@ -1,6 +1,6 @@
 import { TTable } from "./tTableManager.js";
 import applicationFunctionManager from "../services/appFuncManager.js";
-// 移除旧表格系统引用
+// Xóa tham chiếu hệ thống bảng cũ
 import { consoleMessageToEditor } from "../scripts/settings/devConsole.js";
 import { calculateStringHash, generateRandomNumber, generateRandomString, lazy, readonly, } from "../utils/utility.js";
 import { defaultSettings } from "../data/pluginSetting.js";
@@ -22,9 +22,9 @@ let derivedData = {}
 export const APP = applicationFunctionManager
 
 /**
- * @description `USER` 用户数据管理器
- * @description 该管理器用于管理用户的设置、上下文、聊天记录等数据
- * @description 请注意，用户数据应该通过该管理器提供的方法进行访问，而不应该直接访问用户数据
+ * @description `USER` Trình quản lý dữ liệu người dùng
+ * @description Trình quản lý này dùng để quản lý cài đặt, ngữ cảnh, lịch sử chat của người dùng, v.v.
+ * @description Lưu ý, dữ liệu người dùng nên được truy cập qua các phương thức của trình quản lý này, không nên truy cập trực tiếp dữ liệu người dùng
  */
 export const USER = {
     getSettings: () => APP.power_user,
@@ -48,7 +48,7 @@ export const USER = {
         while (chat[index].is_user === true) {
             if(direction === 'up')index--
             else index++
-            if (!chat[index]) return {piece: null, deep: -1}; // 如果没有找到非用户消息，则返回null
+            if (!chat[index]) return {piece: null, deep: -1}; // Nếu không tìm thấy tin nhắn không phải của người dùng, thì trả về null
         }
         return {piece:chat[index], deep: index};
     },
@@ -59,7 +59,7 @@ export const USER = {
             USER.getSettings().table_database_templates = templates;
             USER.saveSettings();
         }
-        console.log("全局模板", templates)
+        console.log("Mẫu toàn cục", templates)
         return templates;
     },
     tableBaseSetting: createProxyWithUserSetting('muyoo_dataTable'),
@@ -69,15 +69,15 @@ export const USER = {
 
 
 /**
- * @description `BASE` 数据库基础数据管理器
- * @description 该管理器提供了对库的用户数据、模板数据的访问，但不提供对数据的修改
- * @description 请注意，对库的操作应通过 `BASE.object()` 创建 `Sheet` 实例进行，任何对库的编辑都不应该直接暴露到该管理器中
+ * @description `BASE` Trình quản lý dữ liệu cơ bản của cơ sở dữ liệu
+ * @description Trình quản lý này cung cấp truy cập vào dữ liệu người dùng và mẫu của cơ sở dữ liệu, nhưng không cung cấp sửa đổi dữ liệu
+ * @description Lưu ý, các hoạt động trên cơ sở dữ liệu nên được thực hiện qua `BASE.object()` để tạo instance `Sheet`, bất kỳ chỉnh sửa nào trên cơ sở dữ liệu đều không nên được phơi bày trực tiếp trong trình quản lý này
  */
 export const BASE = {
     /**
-     * @description `Sheet` 数据表单实例
-     * @description 该实例用于对数据库的数据进行访问、修改、查询等操作
-     * @description 请注意，对数据库的任何操作都应该通过该实例进行，而不应该直接访问数据库
+     * @description `Sheet` Instance bảng dữ liệu
+     * @description Instance này dùng để truy cập, sửa đổi, truy vấn dữ liệu trong cơ sở dữ liệu, v.v.
+     * @description Lưu ý, bất kỳ hoạt động nào trên cơ sở dữ liệu đều nên được thực hiện qua instance này, không nên truy cập trực tiếp cơ sở dữ liệu
      */
     Sheet: TTable.Sheet,
     SheetTemplate: TTable.Template,
@@ -106,7 +106,7 @@ export const BASE = {
                 case 'role':
 
                 default:
-                    throw new Error(`Unknown sheetsData target: ${target}`);
+                    throw new Error(`Mục tiêu sheetsData không xác định: ${target}`);
             }
         },
         set(_, target, value) {
@@ -121,7 +121,7 @@ export const BASE = {
                 case 'global':
                 case 'role':
                 default:
-                    throw new Error(`Cannot set sheetsData target: ${target}`);
+                    throw new Error(`Không thể đặt mục tiêu sheetsData: ${target}`);
             }
         }
     }),
@@ -189,14 +189,14 @@ export const BASE = {
         if(type === 'data') return BASE.saveChatSheets()
         const oldSheets = BASE.getChatSheets().filter(sheet => !newSheets.some(newSheet => newSheet.uid === sheet.uid))
         oldSheets.forEach(sheet => sheet.enable = false)
-        console.log("应用表格数据", newSheets, oldSheets)
+        console.log("Áp dụng dữ liệu bảng", newSheets, oldSheets)
         const mergedSheets = [...newSheets, ...oldSheets]
         BASE.reSaveAllChatSheets(mergedSheets)
     },
     saveChatSheets(saveToPiece = true) {
         if(saveToPiece){
             const {piece} = USER.getChatPiece()
-            if(!piece) return EDITOR.error("没有记录载体，表格是保存在聊天记录中的，请聊至少一轮后再重试")
+            if(!piece) return EDITOR.error("Không có vật chứa hồ sơ, bảng được lưu trong lịch sử chat, vui lòng chat ít nhất một vòng rồi thử lại")
             BASE.getChatSheets(sheet => sheet.save(piece, true))
         }else BASE.getChatSheets(sheet => sheet.save(undefined, true))
         USER.saveChat()
@@ -204,7 +204,7 @@ export const BASE = {
     reSaveAllChatSheets(sheets) {
         BASE.sheetsData.context = []
         const {piece} = USER.getChatPiece()
-        if(!piece) return EDITOR.error("没有记录载体，表格是保存在聊天记录中的，请聊至少一轮后再重试")
+        if(!piece) return EDITOR.error("Không có vật chứa hồ sơ, bảng được lưu trong lịch sử chat, vui lòng chat ít nhất một vòng rồi thử lại")
         sheets.forEach(sheet => {
             sheet.save(piece, true)
         })
@@ -216,8 +216,8 @@ export const BASE = {
         updateSelectBySheetStatus()
     },
     getLastSheetsPiece(deep = 0, cutoff = 1000, deepStartAtLastest = true, direction = 'up') {
-        console.log("向上查询表格数据，深度", deep, "截断", cutoff, "从最新开始", deepStartAtLastest)
-        // 如果没有找到新系统的表格数据，则尝试查找旧系统的表格数据（兼容模式）
+        console.log("Truy vấn dữ liệu bảng lên trên, độ sâu", deep, "Cắt đứt", cutoff, "Bắt đầu từ mới nhất", deepStartAtLastest)
+        // Nếu không tìm thấy dữ liệu bảng của hệ thống mới, thì thử tìm dữ liệu bảng của hệ thống cũ (chế độ tương thích)
         const chat = APP.getContext().chat
         if (!chat || chat.length === 0 || chat.length <= deep) {
             return { deep: -1, piece: BASE.initHashSheet() }
@@ -226,16 +226,16 @@ export const BASE = {
         for (let i = startIndex;
             direction === 'up' ? (i >= 0 && i >= startIndex - cutoff) : (i < chat.length && i < startIndex + cutoff);
             direction === 'up' ? i-- : i++) {
-            if (chat[i].is_user === true) continue; // 跳过用户消息
+            if (chat[i].is_user === true) continue; // Bỏ qua tin nhắn người dùng
             if (chat[i].hash_sheets) {
-                console.log("向上查询表格数据，找到表格数据", chat[i])
+                console.log("Truy vấn dữ liệu bảng lên trên, tìm thấy dữ liệu bảng", chat[i])
                 return { deep: i, piece: chat[i] }
             }
-            // 如果没有找到新系统的表格数据，则尝试查找旧系统的表格数据（兼容模式）
-            // 请注意不再使用旧的Table类
+            // Nếu không tìm thấy dữ liệu bảng của hệ thống mới, thì thử tìm dữ liệu bảng của hệ thống cũ (chế độ tương thích)
+            // Lưu ý không còn sử dụng lớp Table cũ
             if (chat[i].dataTable) {
-                // 为了兼容旧系统，将旧数据转换为新的Sheet格式
-                console.log("找到旧表格数据", chat[i])
+                // Để tương thích với hệ thống cũ, chuyển đổi dữ liệu cũ sang định dạng Sheet mới
+                console.log("Tìm thấy dữ liệu bảng cũ", chat[i])
                 convertOldTablesToNewSheets(chat[i].dataTable, chat[i])
                 return { deep: i, piece: chat[i] }
             }
@@ -244,7 +244,7 @@ export const BASE = {
     },
     getReferencePiece(){
         const swipeInfo = USER.isSwipe()
-        console.log("获取参考片段", swipeInfo)
+        console.log("Lấy đoạn tham chiếu", swipeInfo)
         const {piece} = swipeInfo.isSwipe?swipeInfo.deep===-1?{piece:BASE.initHashSheet()}: BASE.getLastSheetsPiece(swipeInfo.deep-1,1000,false):BASE.getLastSheetsPiece()
         return piece
     },
@@ -265,11 +265,11 @@ export const BASE = {
     },
     initHashSheet() {
         if (BASE.sheetsData.context.length === 0) {
-            console.log("尝试从模板中构建表格数据")
+            console.log("Thử xây dựng dữ liệu bảng từ mẫu")
             const {piece: currentPiece} = USER.getChatPiece()
             buildSheetsByTemplates(currentPiece)
             if (currentPiece?.hash_sheets) {
-                // console.log('使用模板创建了新的表格数据', currentPiece)
+                // console.log('Sử dụng mẫu để tạo dữ liệu bảng mới', currentPiece)
                 return currentPiece
             }
         }
@@ -283,9 +283,9 @@ export const BASE = {
 
 
 /**
- * @description `Editor` 编辑器控制器
- * @description 该控制器用于管理编辑器的状态、事件、设置等数据，包括鼠标位置、聚焦面板、悬停面板、活动面板等
- * @description 编辑器自身数据应相对于其他数据相互独立，对于修改编辑器自身数据不会影响派生数据和用户数据，反之亦然
+ * @description `Editor` Bộ điều khiển trình chỉnh sửa
+ * @description Bộ điều khiển này dùng để quản lý trạng thái, sự kiện, cài đặt của trình chỉnh sửa, bao gồm vị trí chuột, panel tập trung, panel hover, panel hoạt động, v.v.
+ * @description Dữ liệu của trình chỉnh sửa nên độc lập tương đối so với dữ liệu khác, việc sửa đổi dữ liệu của trình chỉnh sửa sẽ không ảnh hưởng đến dữ liệu phái sinh và dữ liệu người dùng, và ngược lại
  * */
 export const EDITOR = {
     Drag: Drag,
@@ -301,7 +301,7 @@ export const EDITOR = {
         try {
             return cb(...args);
         } catch (e) {
-            EDITOR.error(errorMsg ?? '执行代码块失败', e.message, e);
+            EDITOR.error(errorMsg ?? 'Thực thi khối mã thất bại', e.message, e);
             return null;
         }
     },
@@ -326,21 +326,21 @@ export const EDITOR = {
 
 
 /**
- * @description `DerivedData` 项目派生数据管理器
- * @description 该管理器用于管理运行时的派生数据，包括但不限于中间用户数据、系统数据、库数据等
- * @description 请注意，敏感数据不能使用该派生数据管理器进行存储或中转
+ * @description `DerivedData` Trình quản lý dữ liệu phái sinh của dự án
+ * @description Trình quản lý này dùng để quản lý dữ liệu phái sinh thời gian chạy, bao gồm nhưng không giới hạn ở dữ liệu người dùng trung gian, dữ liệu hệ thống, dữ liệu cơ sở dữ liệu, v.v.
+ * @description Lưu ý, dữ liệu nhạy cảm không thể sử dụng trình quản lý dữ liệu phái sinh này để lưu trữ hoặc chuyển tiếp
  * */
 export const DERIVED = {
     get any() {
         return createProxy(derivedData);
     },
-    // 移除旧的Table类引用，使用新的Sheet和SheetTemplate类
+    // Xóa tham chiếu lớp Table cũ, sử dụng lớp Sheet và SheetTemplate mới
 };
 
 
 /**
- * @description `SYSTEM` 系统控制器
- * @description 该控制器用于管理系统级别的数据、事件、设置等数据，包括组件加载、文件读写、代码路径记录等
+ * @description `SYSTEM` Bộ điều khiển hệ thống
+ * @description Bộ điều khiển này dùng để quản lý dữ liệu cấp hệ thống, sự kiện, cài đặt, v.v., bao gồm tải component, đọc viết file, ghi vị trí mã, v.v.
  */
 export const SYSTEM = {
     getTemplate: (name) => {
