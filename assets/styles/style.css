@@ -98,15 +98,12 @@
 .tableDom td,
 .tableDom th {
     border: 1px solid #4e4848;
-    padding: 8px 12px; /* Tăng padding để tạo không gian rộng hơn */
-    word-break: break-word !important; /* Buộc tách từ */
-    overflow-wrap: break-word !important; /* Buộc tách từ dài */
-    word-wrap: break-word !important; /* Hỗ trợ thêm cho các trình duyệt */
-    min-width: 100px !important; /* Tăng chiều rộng tối thiểu */
-    max-width: 100%; /* Giới hạn chiều rộng tối đa */
-    line-height: 1.4 !important; /* Tăng khoảng cách dòng */
-    overflow: visible !important; /* Đảm bảo nội dung không bị ẩn */
+    padding: 3px 5px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere; /* <-- cái này giúp cắt được từ "Yêuthương" thành "Yêu thương" nếu thiếu khoảng trắng */
 }
+
 
 td.selected {
     background-color: rgb(56, 66, 70);
