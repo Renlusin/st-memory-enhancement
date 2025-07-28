@@ -90,7 +90,11 @@ const histories = `
     width: 100%;
     padding: 0 10px;
     font-weight: normal;
-    word-break: break-all;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+    min-width: 150px !important; /* Đảm bảo đủ không gian */
+    line-height: 1.4 !important; /* Tăng khoảng cách dòng */
 }
 .history-cell-timestamp {
     color: var(--SmartThemeEmColor);
